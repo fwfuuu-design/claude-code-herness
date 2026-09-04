@@ -43,7 +43,9 @@ export function VersionDetailClient({
   return (
     <div className="space-y-6">
       {/* Hero Visualization */}
-      <SessionVisualization version={version} />
+      <div className="chapter-visualization">
+        <SessionVisualization version={version} />
+      </div>
 
       {/* Tabbed content */}
       <Tabs tabs={tabs} defaultTab="learn">

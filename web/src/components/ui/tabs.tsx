@@ -64,7 +64,7 @@ export function Tabs({ tabs, defaultTab, children, className }: TabsProps) {
               className={cn(
                 "relative min-h-11 shrink-0 px-4 font-mono text-xs uppercase tracking-[0.06em] transition-colors",
                 selected
-                  ? "text-[var(--color-chalk)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--color-chalk)]"
+                  ? "text-[var(--color-chalk)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--color-active)]"
                   : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
               )}
             >

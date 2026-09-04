@@ -15,8 +15,10 @@
   --color-smoke: #9c9c9c;
   --color-ash: #c1c1c1;
   --color-signal-white: #ffffff;
-  --color-compass-gold: #6f6759;
-  --color-pulse-green: #98ff38;
+  --color-accent: #98ff38;
+  --color-pulse-green: var(--color-accent);
+  /* Compatibility alias: all structural accents now use the same green. */
+  --color-compass-gold: var(--color-accent);
 
   /* Semantic aliases retained across every surface */
   --color-bg: var(--color-obsidian);
@@ -30,8 +32,8 @@
   --color-border: var(--color-graphite);
   --color-border-strong: var(--color-card-slate);
   --color-focus: var(--color-signal-white);
-  --color-direction: var(--color-compass-gold);
-  --color-active: var(--color-pulse-green);
+  --color-direction: var(--color-accent);
+  --color-active: var(--color-accent);
 
   /* Typography */
   --font-display: var(--font-space-grotesk, "Space Grotesk"), "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -45,6 +47,7 @@
   --space-4: 1rem;
   --space-5: 1.25rem;
   --space-6: 1.5rem;
+  --space-7: 1.75rem;
   --space-8: 2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
@@ -125,9 +128,19 @@ h2 {
   letter-spacing: -0.025em;
 }
 
-html[lang="zh"] h1,
-html[lang="zh"] h2 {
-  letter-spacing: -0.01em;
+html[lang^="zh"] {
+  line-break: strict;
+  text-autospace: normal;
+}
+
+html[lang^="zh"] h1,
+html[lang^="zh"] h2 {
+  letter-spacing: 0;
+}
+
+html[lang^="zh"] .prose-custom :where(p, li) {
+  line-height: 1.85;
+  letter-spacing: normal;
 }
 
 p {
@@ -210,6 +223,10 @@ samp {
   flex: none;
   border-radius: 50%;
   background: var(--color-active);
+}
+
+.course-nav-current {
+  border-left-color: var(--color-active);
 }
 
 .button-primary {
@@ -295,12 +312,24 @@ samp {
 }
 
 .prose-custom h2 {
-  margin: var(--space-10) 0 var(--space-4);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-graphite);
+  position: relative;
+  margin: var(--space-12) 0 var(--space-5);
+  padding-left: var(--space-4);
+  border: 0;
   font-size: 1.5rem;
-  line-height: 1.3;
+  line-height: 1.35;
   font-weight: 400;
+  text-wrap: balance;
+}
+
+.prose-custom h2::before {
+  position: absolute;
+  top: 0.2em;
+  bottom: 0.2em;
+  left: 0;
+  width: 2px;
+  content: "";
+  background: var(--color-compass-gold);
 }
 
 .prose-custom h3 {
@@ -318,10 +347,11 @@ samp {
 }
 
 .prose-custom p {
-  margin: var(--space-3) 0;
+  margin: var(--space-4) 0;
   color: var(--color-ash);
   font-size: 1rem;
   line-height: 1.75;
+  text-wrap: pretty;
 }
 
 .prose-custom blockquote {
@@ -337,7 +367,6 @@ samp {
   position: relative;
   margin-top: 0;
   border: 1px solid var(--color-graphite);
-  border-left: 2px solid var(--color-compass-gold);
   border-radius: var(--radius-card);
   background: var(--color-carbon);
   padding: var(--space-5) var(--space-6);
@@ -491,10 +520,10 @@ samp {
 }
 
 .prose-custom hr {
-  height: 1px;
-  margin: var(--space-8) 0;
+  height: 0;
+  margin: var(--space-12) 0;
   border: 0;
-  background: var(--color-graphite);
+  background: none;
 }
 
 .prose-custom strong {
@@ -504,6 +533,16 @@ samp {
 
 .prose-custom em {
   color: var(--color-smoke);
+}
+
+/* Give chapter visualizations room to breathe without changing their internals. */
+.chapter-visualization section > h2 {
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+.chapter-visualization section > h2 + * {
+  margin-block-start: var(--space-7);
 }
 
 /* Restrained functional syntax palette */

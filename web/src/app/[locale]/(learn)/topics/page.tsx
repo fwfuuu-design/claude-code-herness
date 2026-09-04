@@ -91,7 +91,7 @@ export default function TopicsPage() {
                           <ChevronRight
                             size={17}
                             aria-hidden="true"
-                            className="mt-1 shrink-0 text-[var(--color-compass-gold)] transition-transform group-hover:translate-x-1"
+                            className="mt-1 shrink-0 text-[var(--color-chalk)] transition-transform group-hover:translate-x-1"
                           />
                         </div>
 

@@ -49,7 +49,7 @@ export function Sidebar() {
                       className={cn(
                         "group grid min-h-10 grid-cols-[2.5rem_1fr_auto] items-center border-l px-2 text-sm transition-colors",
                         active
-                          ? "border-[var(--color-chalk)] bg-[var(--color-surface)] text-[var(--color-chalk)]"
+                          ? "course-nav-current bg-[var(--color-surface)] text-[var(--color-chalk)]"
                           : "border-transparent text-[var(--color-smoke)] hover:border-[var(--color-iron)] hover:text-[var(--color-chalk)]"
                       )}
                     >

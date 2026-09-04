@@ -13,7 +13,7 @@ const DIAMOND_HEIGHT = 64;
 const NODE_STROKES: Record<string, string> = {
   start: "#c1c1c1",
   process: "#9c9c9c",
-  decision: "#6f6759",
+  decision: "#98ff38",
   subprocess: "#c1c1c1",
   end: "#98ff38",
 };

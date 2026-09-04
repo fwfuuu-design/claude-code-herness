@@ -123,7 +123,7 @@ export function Header() {
                 className={cn(
                   "relative flex h-full items-center font-mono text-xs uppercase tracking-[0.08em] transition-colors",
                   active
-                    ? "text-[var(--color-chalk)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--color-chalk)]"
+                    ? "text-[var(--color-chalk)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--color-active)]"
                     : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
                 )}
               >
