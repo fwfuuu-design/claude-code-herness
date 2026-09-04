@@ -27,7 +27,7 @@ const visualizations: Record<
 export function SessionVisualization({ version }: { version: string }) {
   const t = useTranslations("viz");
   const Component = visualizations[version];
-  if (!Component) return null;
+  if (!Component) return <GenericSystemView title={t(version)} version={version} />;
   return (
     <Suspense
       fallback={
@@ -38,5 +38,27 @@ export function SessionVisualization({ version }: { version: string }) {
         <Component title={t(version)} />
       </div>
     </Suspense>
+  );
+}
+
+function GenericSystemView({ title, version }: { title: string; version: string }) {
+  const t = useTranslations("viz");
+  return (
+    <section className="grid min-h-[22rem] place-items-center border border-[var(--color-border)] bg-[var(--color-carbon)] p-6" aria-label={title}>
+      <div className="w-full max-w-2xl">
+        <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-smoke)]">{version} / {t("system_view")}</p>
+          <span className="status-dot" aria-hidden="true" />
+        </div>
+        <h2 className="mt-6 font-display text-3xl font-normal">{title}</h2>
+        <div className="mt-10 grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2 font-mono text-[9px] sm:text-xs">
+          <span className="grid min-h-20 place-items-center border border-[var(--color-ash)] p-2 text-center">{t("model")}</span>
+          <span className="text-[var(--color-accent)]" aria-hidden="true">→</span>
+          <span className="grid min-h-20 place-items-center border border-[var(--color-accent)] p-2 text-center">{version === "s16" ? t("workflow") : t("evaluator")}</span>
+          <span className="text-[var(--color-accent)]" aria-hidden="true">→</span>
+          <span className="grid min-h-20 place-items-center border border-[var(--color-ash)] p-2 text-center">{t("result")}</span>
+        </div>
+      </div>
+    </section>
   );
 }

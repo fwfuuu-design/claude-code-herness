@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, ReactNode } from "react";
+import { MotionConfig } from "framer-motion";
 import en from "@/i18n/messages/en.json";
 import zh from "@/i18n/messages/zh.json";
 
@@ -16,7 +17,7 @@ export function I18nProvider({ locale, children }: { locale: string; children: R
   const messages = messagesMap[locale] || en;
   return (
     <I18nContext.Provider value={{ locale, messages }}>
-      {children}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
     </I18nContext.Provider>
   );
 }

@@ -2,7 +2,8 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import versionsData from "@/data/generated/versions.json";
+import type { ArchitectureSnapshot } from "@/lib/architecture-data";
+import { useTranslations } from "@/lib/i18n";
 
 const CLASS_DESCRIPTIONS: Record<string, string> = {
   TodoManager: "Visible task planning with constraints",
@@ -22,7 +23,7 @@ const CLASS_DESCRIPTIONS: Record<string, string> = {
 };
 
 interface ArchDiagramProps {
-  version: string;
+  snapshot: ArchitectureSnapshot;
 }
 
 function getNodeTone(): { border: string; bg: string } {
@@ -32,47 +33,15 @@ function getNodeTone(): { border: string; bg: string } {
   };
 }
 
-function collectClassesForVersion(
-  targetId: string
-): { name: string; introducedIn: string }[] {
-  const targetIndex = versionsData.versions.findIndex((v) => v.id === targetId);
-  const version = targetIndex >= 0 ? versionsData.versions[targetIndex] : undefined;
-
-  return (
-    version?.classes?.map((cls) => ({
-      name: cls.name,
-      introducedIn:
-        versionsData.versions
-          .slice(0, targetIndex + 1)
-          .find((candidate) =>
-            candidate.classes?.some((candidateCls) => candidateCls.name === cls.name)
-          )?.id ?? targetId,
-    })) ?? []
-  );
-}
-
-function getNewClassNames(version: string): Set<string> {
-  const diff = versionsData.diffs.find((d) => d.to === version);
-  if (!diff) {
-    const v = versionsData.versions.find((ver) => ver.id === version);
-    return new Set(v?.classes?.map((c) => c.name) ?? []);
-  }
-  return new Set(diff.newClasses ?? []);
-}
-
-export function ArchDiagram({ version }: ArchDiagramProps) {
+export function ArchDiagram({ snapshot }: ArchDiagramProps) {
+  const t = useTranslations("architecture");
   const reduceMotion = useReducedMotion();
-  const allClasses = collectClassesForVersion(version);
-  const newClassNames = getNewClassNames(version);
-  const versionData = versionsData.versions.find((v) => v.id === version);
-  const tools = versionData?.tools ?? [];
-
-  const reversed = [...allClasses].reverse();
+  const reversed = [...snapshot.classes].reverse();
 
   return (
     <div className="space-y-3">
       {reversed.map((cls, i) => {
-        const isNew = newClassNames.has(cls.name);
+        const isNew = cls.isNew;
         const colorClasses = getNodeTone();
 
         return (
@@ -117,7 +86,7 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
               "rounded-lg border-2 px-4 py-3 transition-colors",
               isNew
                 ? cn(colorClasses.border, colorClasses.bg)
-                : "border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/50"
+                : "border-[var(--color-graphite)] bg-[var(--color-carbon)]"
             )}
           >
             <div className="flex items-center justify-between">
@@ -126,8 +95,8 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
                   className={cn(
                     "font-mono text-sm font-semibold",
                     isNew
-                      ? "text-zinc-900 dark:text-white"
-                      : "text-zinc-400 dark:text-zinc-500"
+                      ? "text-[var(--color-chalk)]"
+                      : "text-[var(--color-smoke)]"
                   )}
                 >
                   {cls.name}
@@ -136,20 +105,20 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
                   className={cn(
                     "mt-0.5 text-xs",
                     isNew
-                      ? "text-zinc-600 dark:text-zinc-300"
-                      : "text-zinc-400 dark:text-zinc-500"
+                      ? "text-[var(--color-ash)]"
+                      : "text-[var(--color-smoke)]"
                   )}
                 >
-                  {CLASS_DESCRIPTIONS[cls.name] || ""}
+                  {CLASS_DESCRIPTIONS[cls.name] ? t(`class_${cls.name}`) : ""}
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                <span className="font-mono text-xs text-[var(--color-smoke)]">
                   {cls.introducedIn}
                 </span>
                 {isNew && (
-                  <span className="rounded-full bg-zinc-900 px-2 py-0.5 text-[10px] font-bold uppercase text-white dark:bg-white dark:text-zinc-900">
-                    NEW
+                  <span className="rounded-[var(--radius-label)] border border-[var(--color-accent)] bg-[var(--color-carbon)] px-2 py-0.5 font-mono text-[10px] font-normal uppercase text-[var(--color-chalk)]">
+                    {t("new")}
                   </span>
                 )}
               </div>
@@ -159,23 +128,23 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
         );
       })}
 
-      {allClasses.length === 0 && (
-        <div className="rounded-lg border border-dashed border-zinc-300 px-4 py-6 text-center text-sm text-zinc-400 dark:border-zinc-600">
-          No classes in this version (functions only)
+      {snapshot.classes.length === 0 && (
+        <div className="rounded-lg border border-dashed border-[var(--color-graphite)] bg-[var(--color-carbon)] px-4 py-6 text-center text-sm text-[var(--color-smoke)]">
+          {t("functions_only")}
         </div>
       )}
 
-      {tools.length > 0 && (
+      {snapshot.tools.length > 0 && (
         <motion.div
           initial={reduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: reduceMotion ? 0 : reversed.length * 0.08 + 0.1 }}
           className="flex flex-wrap gap-1.5 pt-2"
         >
-          {tools.map((tool) => (
+          {snapshot.tools.map((tool) => (
             <span
               key={tool}
-              className="rounded-md bg-zinc-100 px-2 py-1 font-mono text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+              className="rounded-[var(--radius-label)] border border-[var(--color-graphite)] bg-[var(--color-carbon)] px-2 py-1 font-mono text-xs text-[var(--color-ash)]"
             >
               {tool}
             </span>

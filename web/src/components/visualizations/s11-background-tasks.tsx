@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
-import { useDarkMode, useSvgPalette } from "@/hooks/useDarkMode";
+import { useSvgPalette } from "@/hooks/useDarkMode";
 
 interface StepInfo {
   title: string;
@@ -75,7 +75,7 @@ const WORK_BLOCKS: WorkBlock[] = [
     lane: "main",
     startFraction: 0,
     endFraction: 1,
-    color: "#8b5cf6",
+    color: "#98ff38",
     label: "Main agent loop",
     appearsAtStep: 1,
   },
@@ -83,7 +83,7 @@ const WORK_BLOCKS: WorkBlock[] = [
     lane: "bg1",
     startFraction: 0.18,
     endFraction: 0.75,
-    color: "#10b981",
+    color: "#98ff38",
     label: "Run tests",
     appearsAtStep: 2,
     completesAtStep: 5,
@@ -92,7 +92,7 @@ const WORK_BLOCKS: WorkBlock[] = [
     lane: "bg2",
     startFraction: 0.35,
     endFraction: 0.58,
-    color: "#3b82f6",
+    color: "#98ff38",
     label: "Lint code",
     appearsAtStep: 3,
     completesAtStep: 4,
@@ -159,7 +159,6 @@ export default function BackgroundTasks({ title }: { title?: string }) {
     toggleAutoPlay,
   } = useSteppedVisualization({ totalSteps: 7, autoPlayInterval: 2500 });
 
-  const isDark = useDarkMode();
   const palette = useSvgPalette();
 
   const stepInfo = STEP_INFO[currentStep];
@@ -196,11 +195,11 @@ export default function BackgroundTasks({ title }: { title?: string }) {
               markerHeight="5"
               orient="auto-start-reverse"
             >
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b" />
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-accent)" />
             </marker>
             <filter id="blockGlow" x="-10%" y="-20%" width="120%" height="140%">
               <feGaussianBlur stdDeviation="2" result="blur" />
-              <feFlood floodColor="#8b5cf6" floodOpacity="0.2" result="color" />
+              <feFlood floodColor="var(--color-accent)" floodOpacity="0.16" result="color" />
               <feComposite in="color" in2="blur" operator="in" result="glow" />
               <feMerge>
                 <feMergeNode in="glow" />
@@ -331,7 +330,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     dominantBaseline="middle"
                     fontSize="9"
                     fontFamily="monospace"
-                    fill="#10b981"
+                    fill="var(--color-accent)"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
@@ -378,7 +377,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                 y1={LANE_Y.main}
                 x2={fractionToX(llmCallFraction)}
                 y2={LANE_Y.main + LANE_HEIGHT}
-                stroke="#f59e0b"
+                stroke="var(--color-accent)"
                 strokeWidth={2}
                 strokeDasharray="3 2"
               />
@@ -388,7 +387,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                 width={72}
                 height={16}
                 rx={3}
-                fill="#f59e0b"
+                fill="var(--color-accent)"
               />
               <text
                 x={fractionToX(llmCallFraction)}
@@ -397,7 +396,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                 dominantBaseline="middle"
                 fontSize="8"
                 fontWeight="600"
-                fill="white"
+                fill="var(--color-carbon)"
               >
                 LLM API call
               </text>
@@ -464,8 +463,8 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                       width={130}
                       height={34}
                       rx={5}
-                      fill={isDark ? "#451a0340" : "#fef3c7"}
-                      stroke="#f59e0b"
+                      fill="var(--color-carbon)"
+                      stroke="var(--color-accent)"
                       strokeWidth={1}
                     />
                     <text
@@ -475,7 +474,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                       dominantBaseline="middle"
                       fontSize="9"
                       fontWeight="600"
-                      fill={isDark ? "#fbbf24" : "#b45309"}
+                      fill="var(--color-chalk)"
                     >
                       tool_result
                     </text>
@@ -486,7 +485,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                       dominantBaseline="middle"
                       fontSize="8"
                       fontFamily="monospace"
-                      fill={isDark ? "#f59e0b" : "#92400e"}
+                      fill="var(--color-ash)"
                     >
                       {card.label}
                     </text>
@@ -507,8 +506,8 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     width={130}
                     height={34}
                     rx={5}
-                    fill={isDark ? "#06402740" : "#d1fae5"}
-                    stroke="#10b981"
+                    fill="var(--color-carbon)"
+                    stroke="var(--color-accent)"
                     strokeWidth={1}
                   />
                   <text
@@ -518,7 +517,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     dominantBaseline="middle"
                     fontSize="9"
                     fontWeight="600"
-                    fill={isDark ? "#34d399" : "#047857"}
+                    fill="var(--color-chalk)"
                   >
                     tool_result
                   </text>
@@ -529,7 +528,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     dominantBaseline="middle"
                     fontSize="8"
                     fontFamily="monospace"
-                    fill={isDark ? "#10b981" : "#065f46"}
+                    fill="var(--color-ash)"
                   >
                     {card.label}
                   </text>
@@ -550,7 +549,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                 y1={QUEUE_Y}
                 x2={fractionToX(llmCallFraction) + 20}
                 y2={LANE_Y.main + LANE_HEIGHT + 4}
-                stroke="#f59e0b"
+                stroke="var(--color-accent)"
                 strokeWidth={1.5}
                 markerEnd="url(#drainArrow)"
                 initial={{ pathLength: 0 }}
@@ -582,25 +581,25 @@ export default function BackgroundTasks({ title }: { title?: string }) {
         {/* Legend */}
         <div className="mt-3 flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded" style={{ background: "#8b5cf6" }} />
+            <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
               Main thread
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded" style={{ background: "#10b981" }} />
+            <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
               Background 1
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded" style={{ background: "#3b82f6" }} />
+            <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
               Background 2
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-3 w-3 rounded" style={{ background: "#f59e0b" }} />
+            <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
               LLM boundary
             </span>

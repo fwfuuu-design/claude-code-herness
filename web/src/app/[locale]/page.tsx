@@ -1,199 +1,179 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations, useLocale } from "@/lib/i18n";
-import { LEARNING_PATH, VERSION_META, LAYERS } from "@/lib/constants";
-import { LayerBadge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import versionsData from "@/data/generated/versions.json";
-import { MessageFlow } from "@/components/architecture/message-flow";
+import { ArrowRight } from "lucide-react";
+import { AgentLoopDemo } from "@/components/home/agent-loop-demo";
+import { HarnessPanel } from "@/components/home/harness-panel";
+import { COURSE_STAGES, LEARNING_PATH, MILESTONE_VERSIONS } from "@/lib/constants";
+import { useLocale, useTranslations } from "@/lib/i18n";
 
-function getVersionData(id: string) {
-  return versionsData.versions.find((v) => v.id === id);
-}
+const HARNESS_PARTS = ["tools", "knowledge", "observation", "action", "permissions"] as const;
+const VALUE_KEYS = ["tools", "context", "state", "control"] as const;
 
 export default function HomePage() {
   const t = useTranslations("home");
   const tSession = useTranslations("sessions");
-  const tInsight = useTranslations("session_insights");
-  const tLayer = useTranslations("layer_labels");
+  const tQuestion = useTranslations("session_questions");
+  const tAddition = useTranslations("session_additions");
+  const tCourse = useTranslations("course");
   const locale = useLocale();
 
   return (
-    <div className="flex flex-col gap-20 pb-16">
-      {/* Hero Section */}
-      <section className="flex flex-col items-center px-2 pt-8 text-center sm:pt-20">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-          {t("hero_title")}
-        </h1>
-        <p className="mt-4 max-w-2xl text-base text-[var(--color-text-secondary)] sm:text-xl">
-          {t("hero_subtitle")}
-        </p>
-        <div className="mt-8">
-          <Link
-            href={`/${locale}/course`}
-            className="button-primary"
-          >
-            {t("start")}
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
-        </div>
-      </section>
-
-      {/* Core Pattern Section */}
-      <section>
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold sm:text-3xl">{t("core_pattern")}</h2>
-          <p className="mt-2 text-[var(--color-text-secondary)]">
-            {t("core_pattern_desc")}
+    <div className="-mt-8 sm:-mt-8 lg:-mt-8">
+      <section className="grid min-h-[calc(100svh-var(--header-height))] items-center gap-10 border-x border-b border-[var(--color-border)] px-5 py-10 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-12 lg:py-14">
+        <div className="min-w-0">
+          <p className="inline-flex items-center gap-2 border border-[var(--color-border)] bg-[var(--color-carbon)] px-3 py-2 font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--color-ash)]">
+            <span className="status-dot" aria-hidden="true" />
+            {t("hero_status")}
           </p>
-        </div>
-        <div className="mx-auto max-w-2xl overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950">
-          <div className="flex items-center gap-2 border-b border-zinc-800 px-4 py-2.5">
-            <span className="h-2 w-2 border border-[var(--color-iron)]" />
-            <span className="h-2 w-2 border border-[var(--color-iron)]" />
-            <span className="h-2 w-2 bg-[var(--color-compass-gold)]" />
-            <span className="ml-3 text-xs text-zinc-500">agent_loop.py</span>
+          <h1 className="mt-7 max-w-3xl font-display text-[clamp(3rem,6.2vw,5.5rem)] font-normal leading-[0.96] tracking-[-0.055em]">
+            {t("hero_title_line_1")}
+            <br />
+            <span className="text-[var(--color-smoke)]">{t("hero_title_line_2")}</span>
+          </h1>
+          <p className="mt-7 max-w-xl text-base leading-relaxed text-[var(--color-ash)] sm:text-lg">
+            {t("hero_subtitle")}
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href={`/${locale}/s01`} className="button-primary">
+              {t("start")}
+              <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+            <Link href={`/${locale}/course`} className="button-secondary">
+              {t("explore_course")}
+            </Link>
+            <HarnessPanel />
           </div>
-          <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
-            <code>
-              <span className="text-purple-400">while</span>
-              <span className="text-zinc-300"> </span>
-              <span className="text-orange-300">True</span>
-              <span className="text-zinc-500">:</span>
-              {"\n"}
-              <span className="text-zinc-300">{"    "}response = client.messages.</span>
-              <span className="text-blue-400">create</span>
-              <span className="text-zinc-500">(</span>
-              <span className="text-zinc-300">messages=</span>
-              <span className="text-zinc-300">messages</span>
-              <span className="text-zinc-500">,</span>
-              <span className="text-zinc-300"> tools=</span>
-              <span className="text-zinc-300">tools</span>
-              <span className="text-zinc-500">)</span>
-              {"\n"}
-              <span className="text-purple-400">{"    "}if</span>
-              <span className="text-zinc-300"> response.stop_reason != </span>
-              <span className="text-green-400">&quot;tool_use&quot;</span>
-              <span className="text-zinc-500">:</span>
-              {"\n"}
-              <span className="text-purple-400">{"        "}break</span>
-              {"\n"}
-              <span className="text-purple-400">{"    "}for</span>
-              <span className="text-zinc-300"> tool_call </span>
-              <span className="text-purple-400">in</span>
-              <span className="text-zinc-300"> response.content</span>
-              <span className="text-zinc-500">:</span>
-              {"\n"}
-              <span className="text-zinc-300">{"        "}result = </span>
-              <span className="text-blue-400">execute_tool</span>
-              <span className="text-zinc-500">(</span>
-              <span className="text-zinc-300">tool_call.name</span>
-              <span className="text-zinc-500">,</span>
-              <span className="text-zinc-300"> tool_call.input</span>
-              <span className="text-zinc-500">)</span>
-              {"\n"}
-              <span className="text-zinc-300">{"        "}messages.</span>
-              <span className="text-blue-400">append</span>
-              <span className="text-zinc-500">(</span>
-              <span className="text-zinc-300">result</span>
-              <span className="text-zinc-500">)</span>
-            </code>
-          </pre>
+          <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--color-smoke)]">
+            {t("brand_line")}
+          </p>
+        </div>
+        <AgentLoopDemo compact />
+      </section>
+
+      <section className="border-x border-b border-[var(--color-border)] px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+        <p className="section-eyebrow">01 / {t("philosophy_eyebrow")}</p>
+        <h2 className="mt-5 max-w-5xl font-display text-[clamp(2.3rem,5vw,4.5rem)] font-normal leading-[1.02]">
+          {t("philosophy_title_1")}
+          <br />
+          <span className="text-[var(--color-smoke)]">{t("philosophy_title_2")}</span>
+        </h2>
+        <div className="mt-14 grid border-l border-t border-[var(--color-border)] md:grid-cols-[1.2fr_1fr]">
+          <div className="border-b border-r border-[var(--color-border)] p-6 sm:p-9">
+            <p className="font-mono text-xs text-[var(--color-smoke)]">{t("agent_product")}</p>
+            <p className="mt-5 font-display text-3xl font-normal sm:text-4xl">
+              MODEL <span className="text-[var(--color-accent)]">+</span> HARNESS
+            </p>
+            <p className="mt-5 max-w-xl leading-relaxed text-[var(--color-smoke)]">
+              {t("philosophy_desc")}
+            </p>
+          </div>
+          <div className="border-b border-r border-[var(--color-border)]">
+            {HARNESS_PARTS.map((part, index) => (
+              <div key={part} className="grid grid-cols-[2.5rem_1fr] border-b border-[var(--color-border)] px-5 py-3 last:border-b-0">
+                <span className="font-mono text-[10px] text-[var(--color-smoke)]">0{index + 1}</span>
+                <span className="font-mono text-xs uppercase tracking-[0.05em]">{t(`harness_${part}`)}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Message Flow Visualization */}
-      <section>
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold sm:text-3xl">{t("message_flow")}</h2>
-          <p className="mt-2 text-[var(--color-text-secondary)]">
-            {t("message_flow_desc")}
+      <section className="border-x border-b border-[var(--color-border)] px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div>
+            <p className="section-eyebrow">02 / {t("value_eyebrow")}</p>
+            <h2 className="mt-5 font-display text-4xl font-normal sm:text-5xl">{t("value_title")}</h2>
+          </div>
+          <p className="max-w-2xl text-base leading-relaxed text-[var(--color-smoke)] lg:justify-self-end">
+            {t("value_intro")}
           </p>
         </div>
-        <div className="mx-auto max-w-2xl">
-          <MessageFlow />
+        <div className="mt-12 grid border-l border-t border-[var(--color-border)] sm:grid-cols-2">
+          {VALUE_KEYS.map((key, index) => (
+            <article key={key} className="min-h-56 border-b border-r border-[var(--color-border)] p-6 sm:p-8">
+              <span className="font-mono text-[10px] text-[var(--color-accent)]">0{index + 1}</span>
+              <h3 className="mt-8 font-display text-2xl font-normal">{t(`value_${key}`)}</h3>
+              <p className="mt-3 max-w-sm text-sm leading-relaxed text-[var(--color-smoke)]">{t(`value_${key}_desc`)}</p>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* Learning Path Preview */}
-      <section>
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold sm:text-3xl">{t("learning_path")}</h2>
-          <p className="mt-2 text-[var(--color-text-secondary)]">
-            {t("learning_path_desc")}
-          </p>
+      <section className="border-x border-b border-[var(--color-border)] px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="section-eyebrow">03 / {t("path_eyebrow")}</p>
+            <h2 className="mt-5 font-display text-4xl font-normal sm:text-5xl">{t("learning_path")}</h2>
+            <p className="mt-4 max-w-2xl text-[var(--color-smoke)]">{t("learning_path_desc")}</p>
+          </div>
+          <Link href={`/${locale}/course`} className="button-secondary shrink-0">{t("view_full_course")} →</Link>
         </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="relative mt-12 grid gap-px bg-[var(--color-border)] border border-[var(--color-border)] sm:grid-cols-2 lg:grid-cols-3">
           {LEARNING_PATH.map((versionId) => {
-            const meta = VERSION_META[versionId];
-            const data = getVersionData(versionId);
-            if (!meta || !data) return null;
+            const milestone = MILESTONE_VERSIONS.includes(versionId as (typeof MILESTONE_VERSIONS)[number]);
             return (
               <Link
                 key={versionId}
                 href={`/${locale}/${versionId}`}
-                className="group block"
+                className="group relative min-h-40 bg-[var(--color-obsidian)] p-5 transition-colors hover:bg-[var(--color-surface)] focus-visible:z-10"
               >
-                <Card className="h-full bg-transparent transition-colors">
-                  <div className="flex items-start justify-between gap-2">
-                    <LayerBadge layer={meta.layer}>{versionId}</LayerBadge>
-                    <span className="text-xs tabular-nums text-[var(--color-text-secondary)]">
-                      {data.loc} {t("loc")}
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-sm font-semibold group-hover:underline">
-                    {tSession(versionId)}
-                  </h3>
-                  <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-                    {tInsight(versionId)}
-                  </p>
-                </Card>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs uppercase text-[var(--color-chalk)]">{versionId}</span>
+                  <span className={milestone ? "status-dot" : "h-2 w-2 border border-[var(--color-iron)]"} aria-hidden="true" />
+                </div>
+                <h3 className="mt-6 font-display text-xl font-normal">{tSession(versionId)}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-[var(--color-smoke)]">{tQuestion(versionId)}</p>
+                <p className="mt-4 font-mono text-[10px] uppercase text-[var(--color-ash)]">+ {tAddition(versionId)}</p>
               </Link>
             );
           })}
         </div>
       </section>
 
-      {/* Layer Overview */}
-      <section>
-        <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold sm:text-3xl">{t("layers_title")}</h2>
-          <p className="mt-2 text-[var(--color-text-secondary)]">
-            {t("layers_desc")}
-          </p>
-        </div>
-        <div className="flex flex-col gap-3">
-          {LAYERS.map((layer) => (
-            <div
-              key={layer.id}
-              className="flex items-center gap-4 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-transparent p-4"
-            >
-              <div className="w-px self-stretch bg-[var(--color-compass-gold)]" />
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-medium">{tLayer(layer.id)}</h3>
-                  <span className="text-xs text-[var(--color-text-secondary)]">
-                    {layer.versions.length} {t("versions_in_layer")}
-                  </span>
-                </div>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {layer.versions.map((vid) => {
-                    return (
-                      <Link key={vid} href={`/${locale}/${vid}`}>
-                        <LayerBadge
-                          layer={layer.id}
-                          className="cursor-pointer transition-opacity hover:opacity-80"
-                        >
-                          {vid}: {tSession(vid)}
-                        </LayerBadge>
-                      </Link>
-                    );
-                  })}
-                </div>
+      <section className="border-x border-b border-[var(--color-border)] px-5 py-24 sm:px-8 sm:py-32 lg:px-12">
+        <p className="section-eyebrow">04 / {t("stages_eyebrow")}</p>
+        <h2 className="mt-5 font-display text-4xl font-normal sm:text-5xl">{t("stages_title")}</h2>
+        <div className="mt-12 border-t border-[var(--color-border)]">
+          {COURSE_STAGES.map((stage, index) => (
+            <article key={stage.id} className="grid gap-4 border-b border-[var(--color-border)] py-7 md:grid-cols-[4rem_1fr_1fr] md:items-start">
+              <span className="grid h-10 w-10 place-items-center border border-[var(--color-accent)] font-mono text-[10px]">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h3 className="font-display text-2xl font-normal">{tCourse(`stage_${stage.id}`)}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-[var(--color-smoke)]">{tCourse(`stage_${stage.id}_desc`)}</p>
               </div>
-            </div>
+              <div className="flex flex-wrap gap-2 md:justify-end">
+                {stage.versions.map((versionId) => (
+                  <Link key={versionId} href={`/${locale}/${versionId}`} className="inline-flex min-h-11 items-center border border-[var(--color-graphite)] px-3 font-mono text-[10px] uppercase hover:border-[var(--color-ash)]">
+                    {versionId} / {tSession(versionId)}
+                  </Link>
+                ))}
+              </div>
+            </article>
           ))}
+        </div>
+      </section>
+
+      <section className="grid gap-10 border-x border-b border-[var(--color-border)] px-5 py-24 sm:px-8 sm:py-32 lg:grid-cols-[0.72fr_1.28fr] lg:px-12">
+        <div>
+          <p className="section-eyebrow">05 / {t("core_loop_eyebrow")}</p>
+          <h2 className="mt-5 font-display text-4xl font-normal sm:text-5xl">{t("core_loop_title")}</h2>
+          <p className="mt-5 max-w-md leading-relaxed text-[var(--color-smoke)]">{t("core_loop_desc")}</p>
+        </div>
+        <AgentLoopDemo />
+      </section>
+
+      <section className="border-x border-b border-[var(--color-border)] px-5 py-24 text-center sm:px-8 sm:py-36 lg:px-12">
+        <p className="section-eyebrow justify-center">06 / {t("closing_eyebrow")}</p>
+        <h2 className="mx-auto mt-6 max-w-5xl font-display text-[clamp(2.5rem,5vw,4.75rem)] font-normal leading-[1.05]">
+          {t("closing_line_1")}<br />
+          <span className="text-[var(--color-smoke)]">{t("closing_line_2")}</span>
+        </h2>
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
+          <Link href={`/${locale}/s01`} className="button-primary">{t("start")} →</Link>
+          <Link href={`/${locale}/course`} className="button-secondary">{t("view_full_course")}</Link>
         </div>
       </section>
     </div>

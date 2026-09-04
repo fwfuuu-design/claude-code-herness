@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations, useLocale } from "@/lib/i18n";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ import s15Annotations from "@/data/annotations/s15.json";
 import s16Annotations from "@/data/annotations/s16.json";
 import s17Annotations from "@/data/annotations/s17.json";
 
-interface Decision {
+export interface Decision {
   id: string;
   title: string;
   description: string;
@@ -33,12 +33,12 @@ interface Decision {
   ja?: { title: string; description: string };
 }
 
-interface AnnotationFile {
+export interface AnnotationFile {
   version: string;
   decisions: Decision[];
 }
 
-const ANNOTATIONS: Record<string, AnnotationFile> = {
+export const ANNOTATIONS: Record<string, AnnotationFile> = {
   s01: s01Annotations as AnnotationFile,
   s02: s02Annotations as AnnotationFile,
   s03: s03Annotations as AnnotationFile,
@@ -71,6 +71,7 @@ function DecisionCard({
 }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("version");
+  const reduceMotion = useReducedMotion();
 
   const localized =
     locale !== "en" ? (decision as unknown as Record<string, unknown>)[locale] as { title?: string; description?: string } | undefined : undefined;
@@ -99,10 +100,10 @@ function DecisionCard({
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            exit={reduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.2 }}
             className="overflow-hidden"
           >
             <div className="border-t border-zinc-100 px-4 py-3 dark:border-zinc-800">
@@ -110,7 +111,7 @@ function DecisionCard({
                 {description}
               </p>
 
-              {decision.alternatives && (
+              {locale === "en" && decision.alternatives && (
                 <div className="mt-3">
                   <h4 className="text-xs font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
                     {t("alternatives")}
@@ -131,6 +132,7 @@ function DecisionCard({
 export function DesignDecisions({ version }: DesignDecisionsProps) {
   const t = useTranslations("version");
   const locale = useLocale();
+  const reduceMotion = useReducedMotion();
 
   const annotations = ANNOTATIONS[version];
   if (!annotations || annotations.decisions.length === 0) {
@@ -138,7 +140,7 @@ export function DesignDecisions({ version }: DesignDecisionsProps) {
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">{t("design_decisions")}</h2>
         <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
-          Design decisions are not available for this lesson yet.
+          {t("design_unavailable")}
         </div>
       </div>
     );
@@ -151,9 +153,9 @@ export function DesignDecisions({ version }: DesignDecisionsProps) {
         {annotations.decisions.map((decision, i) => (
           <motion.div
             key={decision.id}
-            initial={{ opacity: 0, y: 10 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05 }}
+            transition={{ delay: reduceMotion ? 0 : i * 0.05 }}
           >
             <DecisionCard decision={decision} locale={locale} />
           </motion.div>

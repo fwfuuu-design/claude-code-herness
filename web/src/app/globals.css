@@ -208,6 +208,27 @@ select:disabled {
   font-family: var(--font-display);
 }
 
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-smoke);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.section-eyebrow::before {
+  width: 1.5rem;
+  height: 1px;
+  flex: none;
+  content: "";
+  background: var(--color-accent);
+}
+
 .font-mono,
 code,
 pre,
@@ -621,6 +642,10 @@ samp {
 }
 
 @media (max-width: 640px) {
+  .site-main {
+    padding-inline: var(--space-5);
+  }
+
   .prose-custom pre,
   .prose-custom code {
     font-size: 0.75rem;

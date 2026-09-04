@@ -171,7 +171,7 @@ export function Header() {
         <div
           ref={mobileMenuRef}
           id="mobile-navigation"
-          className="border-b border-[var(--color-border)] bg-[var(--color-carbon)] px-4 pb-6 pt-3 md:hidden"
+          className="max-h-[calc(100svh-var(--header-height))] overflow-y-auto border-b border-[var(--color-border)] bg-[var(--color-carbon)] px-4 pb-6 pt-3 md:hidden"
         >
           <nav className="mx-auto max-w-[var(--page-max)]" aria-label={t("primary_navigation")}>
             {NAV_ITEMS.map((item) => {

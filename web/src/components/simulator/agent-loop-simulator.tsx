@@ -2,8 +2,9 @@
 
 import { useRef, useEffect, useState } from "react";
 import { AnimatePresence, useReducedMotion } from "framer-motion";
-import { useTranslations } from "@/lib/i18n";
+import { useLocale, useTranslations } from "@/lib/i18n";
 import { useSimulator } from "@/hooks/useSimulator";
+import { localizeScenario } from "@/data/scenario-localization";
 import { SimulatorControls } from "./simulator-controls";
 import { SimulatorMessage } from "./simulator-message";
 import type { Scenario } from "@/types/agent-data";
@@ -34,16 +35,21 @@ interface AgentLoopSimulatorProps {
 
 export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
   const t = useTranslations("version");
+  const tSim = useTranslations("sim");
+  const locale = useLocale();
   const reduceMotion = useReducedMotion();
   const [scenario, setScenario] = useState<Scenario | null>(null);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "unavailable" | "error">("loading");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
     const loader = scenarioModules[version];
     setScenario(null);
+    setLoadState("loading");
 
     if (!loader) {
+      setLoadState("unavailable");
       return () => {
         cancelled = true;
       };
@@ -51,10 +57,16 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
 
     loader()
       .then((mod) => {
-        if (!cancelled) setScenario(mod.default);
+        if (!cancelled) {
+          setScenario(mod.default);
+          setLoadState("ready");
+        }
       })
       .catch(() => {
-        if (!cancelled) setScenario(null);
+        if (!cancelled) {
+          setScenario(null);
+          setLoadState("error");
+        }
       });
 
     return () => {
@@ -62,7 +74,14 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
     };
   }, [version]);
 
-  const sim = useSimulator(scenario?.steps ?? []);
+  const localizedScenario = scenario ? localizeScenario(scenario, locale) : null;
+  const sim = useSimulator(localizedScenario?.steps ?? []);
+
+  useEffect(() => {
+    sim.reset();
+    // A route parameter change starts a fresh scenario.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -76,9 +95,12 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
   if (!scenario) {
     return (
       <section>
-        <h2 className="mb-2 text-xl font-semibold">{t("simulator")}</h2>
-        <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
-          Simulator scenario is not available for this lesson yet.
+        <h2 className="mb-2 font-display text-xl font-normal">{t("simulator")}</h2>
+        <div
+          role={loadState === "error" ? "alert" : "status"}
+          className="min-h-40 border border-dashed border-[var(--color-border)] bg-[var(--color-carbon)] p-6 text-sm text-[var(--color-smoke)]"
+        >
+          {tSim(loadState === "loading" ? "loading" : loadState === "error" ? "load_error" : "unavailable")}
         </div>
       </section>
     );
@@ -86,9 +108,9 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
 
   return (
     <section>
-      <h2 className="mb-2 text-xl font-semibold">{t("simulator")}</h2>
+      <h2 className="mb-2 font-display text-xl font-normal">{t("simulator")}</h2>
       <p className="mb-4 text-sm text-[var(--color-text-secondary)]">
-        {scenario.description}
+        {localizedScenario?.description}
       </p>
 
       <div className="overflow-hidden rounded-lg border border-[var(--color-border)]">
@@ -100,6 +122,7 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
             totalSteps={sim.totalSteps}
             speed={sim.speed}
             onPlay={sim.play}
+            reducedMotion={!!reduceMotion}
             onPause={sim.pause}
             onStep={sim.stepForward}
             onReset={sim.reset}
@@ -113,7 +136,7 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
         >
           {sim.visibleSteps.length === 0 && (
             <div className="flex flex-1 items-center justify-center text-sm text-[var(--color-text-secondary)]">
-              Press Play or Step to begin
+              {tSim("start_hint")}
             </div>
           )}
           <AnimatePresence mode="popLayout">

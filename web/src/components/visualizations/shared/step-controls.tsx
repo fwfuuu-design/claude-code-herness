@@ -1,6 +1,8 @@
 "use client";
 
 import { Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 interface StepControlsProps {
@@ -28,6 +30,8 @@ export function StepControls({
   stepDescription,
   className,
 }: StepControlsProps) {
+  const t = useTranslations("sim");
+  const reducedMotion = usePrefersReducedMotion();
   const controlClass =
     "flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-control)] border border-transparent text-[var(--color-smoke)] transition-colors hover:border-[var(--color-iron)] hover:text-[var(--color-chalk)] disabled:opacity-30";
 
@@ -48,8 +52,8 @@ export function StepControls({
             type="button"
             onClick={onReset}
             className={controlClass}
-            title="Reset"
-            aria-label="Reset"
+            title={t("reset")}
+            aria-label={t("reset")}
           >
             <RotateCcw size={16} aria-hidden="true" />
           </button>
@@ -58,17 +62,18 @@ export function StepControls({
             onClick={onPrev}
             disabled={currentStep === 0}
             className={controlClass}
-            title="Previous step"
-            aria-label="Previous step"
+            title={t("previous_step")}
+            aria-label={t("previous_step")}
           >
             <SkipBack size={16} aria-hidden="true" />
           </button>
           <button
             type="button"
             onClick={onToggleAutoPlay}
+            disabled={reducedMotion}
             className={controlClass}
-            title={isPlaying ? "Pause" : "Auto-play"}
-            aria-label={isPlaying ? "Pause" : "Auto-play"}
+            title={reducedMotion ? t("manual_mode") : isPlaying ? t("pause") : t("auto_play")}
+            aria-label={reducedMotion ? t("manual_mode") : isPlaying ? t("pause") : t("auto_play")}
           >
             {isPlaying ? (
               <Pause size={16} aria-hidden="true" />
@@ -81,8 +86,8 @@ export function StepControls({
             onClick={onNext}
             disabled={currentStep === totalSteps - 1}
             className={controlClass}
-            title="Next step"
-            aria-label="Next step"
+            title={t("next_step")}
+            aria-label={t("next_step")}
           >
             <SkipForward size={16} aria-hidden="true" />
           </button>

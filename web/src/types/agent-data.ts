@@ -44,6 +44,14 @@ export interface VersionIndex {
   diffs: VersionDiff[];
 }
 
+/** Data loaded only when a chapter's Source tab is opened. */
+export type SourcePayload = Pick<
+  AgentVersion,
+  "id" | "filename" | "source" | "classes" | "functions"
+> & {
+  baselineId: string | null;
+};
+
 export type SimStepType =
   | "user_message"
   | "assistant_text"

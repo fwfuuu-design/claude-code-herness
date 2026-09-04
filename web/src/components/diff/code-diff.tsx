@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { diffLines, Change } from "diff";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n";
 
 interface CodeDiffProps {
   oldSource: string;
@@ -12,6 +13,7 @@ interface CodeDiffProps {
 }
 
 export function CodeDiff({ oldSource, newSource, oldLabel, newLabel }: CodeDiffProps) {
+  const t = useTranslations("code_diff");
   const [viewMode, setViewMode] = useState<"unified" | "split">("unified");
 
   const changes = useMemo(() => diffLines(oldSource, newSource), [oldSource, newSource]);
@@ -21,7 +23,7 @@ export function CodeDiff({ oldSource, newSource, oldLabel, newLabel }: CodeDiffP
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 truncate text-sm text-zinc-500 dark:text-zinc-400">
           <span className="font-medium text-zinc-700 dark:text-zinc-300">{oldLabel}</span>
-          {" -> "}
+          {" → "}
           <span className="font-medium text-zinc-700 dark:text-zinc-300">{newLabel}</span>
         </div>
         <div className="flex shrink-0 rounded-[var(--radius-control)] border border-[var(--color-border)]">
@@ -36,7 +38,7 @@ export function CodeDiff({ oldSource, newSource, oldLabel, newLabel }: CodeDiffP
                 : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
             )}
           >
-            Unified
+            {t("unified")}
           </button>
           <button
             type="button"
@@ -49,21 +51,21 @@ export function CodeDiff({ oldSource, newSource, oldLabel, newLabel }: CodeDiffP
                 : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
             )}
           >
-            Split
+            {t("split")}
           </button>
         </div>
       </div>
 
       {viewMode === "unified" ? (
-        <UnifiedView changes={changes} />
+        <UnifiedView changes={changes} label={t("unified_label")} />
       ) : (
-        <SplitView changes={changes} />
+        <SplitView changes={changes} label={t("split_label")} />
       )}
     </div>
   );
 }
 
-function UnifiedView({ changes }: { changes: Change[] }) {
+function UnifiedView({ changes, label }: { changes: Change[]; label: string }) {
   let oldLine = 1;
   let newLine = 1;
 
@@ -83,8 +85,8 @@ function UnifiedView({ changes }: { changes: Change[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
-      <table className="w-full border-collapse font-mono text-xs leading-5">
+    <div className="overflow-x-auto rounded-[var(--radius-card)] border border-[var(--color-border)]">
+      <table aria-label={label} className="w-full border-collapse font-mono text-xs leading-5">
         <tbody>
           {rows.map((row, i) => (
             <tr
@@ -123,7 +125,7 @@ function UnifiedView({ changes }: { changes: Change[] }) {
   );
 }
 
-function SplitView({ changes }: { changes: Change[] }) {
+function SplitView({ changes, label }: { changes: Change[]; label: string }) {
   let oldLine = 1;
   let newLine = 1;
 
@@ -183,8 +185,8 @@ function SplitView({ changes }: { changes: Change[] }) {
     );
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
-      <table className="w-full border-collapse font-mono text-xs leading-5">
+    <div className="overflow-x-auto rounded-[var(--radius-card)] border border-[var(--color-border)]">
+      <table aria-label={label} className="w-full border-collapse font-mono text-xs leading-5">
         <tbody>
           {rows.map((row, i) => (
             <tr key={i}>

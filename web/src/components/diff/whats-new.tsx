@@ -123,7 +123,7 @@ export function WhatsNew({ diff }: WhatsNewProps) {
                   {td("loc_delta")}
                 </h3>
                 <p className="font-mono text-2xl text-[var(--color-chalk)]">
-                  +{diff.locDelta} lines
+                  {diff.locDelta >= 0 ? "+" : ""}{diff.locDelta} {td("lines")}
                 </p>
               </div>
             </Card>

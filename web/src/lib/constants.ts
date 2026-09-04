@@ -25,6 +25,28 @@ export const LEARNING_PATH = VERSION_ORDER;
 
 export type VersionId = (typeof VERSION_ORDER)[number];
 
+/** The six editorial stages used by Home and Course. */
+export const COURSE_STAGES = [
+  { id: "foundations", versions: ["s01", "s02", "s03", "s04"] },
+  { id: "planning_context", versions: ["s05", "s06", "s07", "s08"] },
+  { id: "memory_tasks", versions: ["s09", "s10"] },
+  { id: "concurrency_scheduling", versions: ["s11", "s12"] },
+  { id: "agents_capabilities", versions: ["s13", "s14"] },
+  { id: "integration_closure", versions: ["s15", "s16", "s17"] },
+] as const satisfies ReadonlyArray<{
+  id: string;
+  versions: readonly VersionId[];
+}>;
+
+export const MILESTONE_VERSIONS = [
+  "s01",
+  "s04",
+  "s08",
+  "s13",
+  "s15",
+  "s17",
+] as const satisfies readonly VersionId[];
+
 /**
  * Structural chapter metadata only. User-facing chapter copy lives in the
  * locale message files so the order/dependency graph cannot drift by locale.

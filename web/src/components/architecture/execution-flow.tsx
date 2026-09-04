@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useId, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { getFlowForVersion } from "@/data/execution-flows";
 import type { FlowNode, FlowEdge } from "@/types/agent-data";
+import { useTranslations } from "@/lib/i18n";
 
 const NODE_WIDTH = 140;
 const NODE_HEIGHT = 44;
@@ -309,10 +310,14 @@ function EdgePath({
   edge,
   nodes,
   index,
+  reducedMotion,
+  markerId,
 }: {
   edge: FlowEdge;
   nodes: FlowNode[];
   index: number;
+  reducedMotion: boolean;
+  markerId: string;
 }) {
   const from = nodes.find((n) => n.id === edge.from);
   const to = nodes.find((n) => n.id === edge.to);
@@ -331,10 +336,10 @@ function EdgePath({
         fill="none"
         stroke="var(--color-text-secondary)"
         strokeWidth={1.5}
-        markerEnd="url(#arrowhead)"
-        initial={{ pathLength: 0, opacity: 0 }}
+        markerEnd={`url(#${markerId})`}
+        initial={reducedMotion ? false : { pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
-        transition={{ duration: 0.5, delay: index * 0.12 }}
+        transition={{ duration: reducedMotion ? 0 : 0.5, delay: reducedMotion ? 0 : index * 0.12 }}
       />
       {edge.label && (
         <motion.text
@@ -348,9 +353,9 @@ function EdgePath({
           strokeLinejoin="round"
           paintOrder="stroke"
           fontFamily="monospace"
-          initial={{ opacity: 0 }}
+          initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: index * 0.12 + 0.3 }}
+          transition={{ delay: reducedMotion ? 0 : index * 0.12 + 0.3 }}
         >
           {edge.label}
         </motion.text>
@@ -364,6 +369,9 @@ interface ExecutionFlowProps {
 }
 
 export function ExecutionFlow({ version }: ExecutionFlowProps) {
+  const t = useTranslations("version");
+  const reducedMotion = !!useReducedMotion();
+  const markerId = `execution-arrow-${useId().replace(/:/g, "")}`;
   const [flow, setFlow] = useState<ReturnType<typeof getFlowForVersion>>(null);
 
   useEffect(() => {
@@ -373,7 +381,7 @@ export function ExecutionFlow({ version }: ExecutionFlowProps) {
   if (!flow) {
     return (
       <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
-        Execution flow is not available for this lesson yet.
+        {t("execution_unavailable")}
       </div>
     );
   }
@@ -392,7 +400,7 @@ export function ExecutionFlow({ version }: ExecutionFlowProps) {
       >
         <defs>
           <marker
-            id="arrowhead"
+            id={markerId}
             markerWidth={8}
             markerHeight={6}
             refX={8}
@@ -407,7 +415,7 @@ export function ExecutionFlow({ version }: ExecutionFlowProps) {
         </defs>
 
         {flow.edges.map((edge, i) => (
-          <EdgePath key={`${edge.from}-${edge.to}-${i}`} edge={edge} nodes={flow.nodes} index={i} />
+          <EdgePath key={`${edge.from}-${edge.to}-${i}`} edge={edge} nodes={flow.nodes} index={i} reducedMotion={reducedMotion} markerId={markerId} />
         ))}
 
         {flow.nodes.map((node, i) => (
@@ -415,9 +423,9 @@ export function ExecutionFlow({ version }: ExecutionFlowProps) {
             key={node.id}
             data-node-id={node.id}
             data-node-label={node.label}
-            initial={{ opacity: 0, y: -10 }}
+            initial={reducedMotion ? false : { opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.06, duration: 0.3 }}
+            transition={{ delay: reducedMotion ? 0 : i * 0.06, duration: reducedMotion ? 0 : 0.3 }}
           >
             <NodeShape node={node} />
           </motion.g>

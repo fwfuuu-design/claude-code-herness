@@ -15,6 +15,7 @@ interface SimulatorControlsProps {
   onStep: () => void;
   onReset: () => void;
   onSpeedChange: (speed: number) => void;
+  reducedMotion?: boolean;
 }
 
 const SPEEDS = [0.5, 1, 2, 4];
@@ -30,6 +31,7 @@ export function SimulatorControls({
   onStep,
   onReset,
   onSpeedChange,
+  reducedMotion = false,
 }: SimulatorControlsProps) {
   const t = useTranslations("sim");
 
@@ -48,9 +50,9 @@ export function SimulatorControls({
         ) : (
           <button
             onClick={onPlay}
-            disabled={isComplete}
+            disabled={isComplete || reducedMotion}
+            title={reducedMotion ? t("manual_mode") : t("play")}
             className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-signal-white)] text-[var(--color-carbon)] transition-opacity hover:opacity-80 disabled:opacity-40"
-            title={t("play")}
             aria-label={t("play")}
           >
             <Play size={16} aria-hidden="true" />
@@ -84,7 +86,7 @@ export function SimulatorControls({
             key={s}
             onClick={() => onSpeedChange(s)}
             className={cn(
-              "min-h-11 rounded-[var(--radius-label)] px-2 text-xs font-medium transition-colors",
+              "min-h-11 min-w-11 rounded-[var(--radius-label)] px-2 text-xs font-medium transition-colors",
               speed === s
                 ? "border border-[var(--color-chalk)] bg-[var(--color-chalk)] text-[var(--color-carbon)]"
                 : "border border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
@@ -96,7 +98,7 @@ export function SimulatorControls({
       </div>
 
       <span className="ml-auto text-xs tabular-nums text-[var(--color-text-secondary)]">
-        {Math.max(0, currentIndex + 1)} {t("step_of")} {totalSteps}
+        {reducedMotion ? t("manual_mode") : `${Math.max(0, currentIndex + 1)} ${t("step_of")} ${totalSteps}`}
       </span>
     </div>
   );

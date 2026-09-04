@@ -6,6 +6,7 @@ import type {
   DocContent,
   VersionIndex,
   ChapterImage,
+  SourcePayload,
 } from "../src/types/agent-data";
 import {
   VERSION_META,
@@ -17,6 +18,7 @@ import {
 const WEB_DIR = path.resolve(__dirname, "..");
 const REPO_ROOT = path.resolve(WEB_DIR, "..");
 const OUT_DIR = path.join(WEB_DIR, "src", "data", "generated");
+const SOURCE_OUT_DIR = path.join(OUT_DIR, "sources");
 const PUBLIC_DIR = path.join(WEB_DIR, "public");
 const COURSE_ASSETS_DIR = path.join(PUBLIC_DIR, "course-assets");
 
@@ -439,10 +441,26 @@ function main() {
   const diffs = buildDiffs(versions);
 
   fs.mkdirSync(OUT_DIR, { recursive: true });
+  fs.rmSync(SOURCE_OUT_DIR, { recursive: true, force: true });
+  fs.mkdirSync(SOURCE_OUT_DIR, { recursive: true });
 
   const index: VersionIndex = { versions, diffs };
   fs.writeFileSync(path.join(OUT_DIR, "versions.json"), JSON.stringify(index, null, 2));
   fs.writeFileSync(path.join(OUT_DIR, "docs.json"), JSON.stringify(docs, null, 2));
+  for (const version of versions) {
+    const payload: SourcePayload = {
+      id: version.id,
+      filename: version.filename,
+      source: version.source,
+      classes: version.classes,
+      functions: version.functions,
+      baselineId: diffs.find((diff) => diff.to === version.id)?.from ?? null,
+    };
+    fs.writeFileSync(
+      path.join(SOURCE_OUT_DIR, `${version.id}.json`),
+      JSON.stringify(payload)
+    );
+  }
 
   console.log("\nExtraction complete:");
   console.log(`  ${versions.length} versions`);

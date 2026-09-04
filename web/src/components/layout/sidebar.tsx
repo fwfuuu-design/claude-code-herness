@@ -2,45 +2,41 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LAYERS } from "@/lib/constants";
+import { COURSE_STAGES, type VersionId } from "@/lib/constants";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useLocale, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-export function Sidebar() {
+export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
   const locale = useLocale();
   const tSession = useTranslations("sessions");
-  const tLayer = useTranslations("layer_labels");
+  const tCourse = useTranslations("course");
   const tNav = useTranslations("nav");
+  const tProgress = useTranslations("progress");
+  const { getStatus } = useReadingProgress();
 
   return (
     <nav
-      className="hidden w-60 shrink-0 border-r border-[var(--color-border)] pr-5 md:block"
+      className={cn(
+        mobile ? "w-full" : "hidden w-[13.5rem] shrink-0 border-r border-[var(--color-border)] pr-5 min-[1200px]:block"
+      )}
       aria-label={tNav("course")}
     >
-      <div className="sticky top-[calc(var(--header-height)+2rem)] space-y-7">
-        {LAYERS.map((layer, layerIndex) => (
-          <section key={layer.id} aria-labelledby={`sidebar-${layer.id}`}>
-            <div className="flex items-center gap-2 pb-2">
-              <span
-                className="h-2 w-2 border border-[var(--color-compass-gold)]"
-                aria-hidden="true"
-              />
-              <h2
-                id={`sidebar-${layer.id}`}
-                className="font-mono text-[10px] font-normal uppercase tracking-[0.1em] text-[var(--color-smoke)]"
-              >
-                {String(layerIndex + 1).padStart(2, "0")} / {tLayer(layer.id)}
-              </h2>
-            </div>
-            <ul className="space-y-0.5">
-              {layer.versions.map((versionId) => {
+      <div className={cn(!mobile && "sticky top-[calc(var(--header-height)+2rem)] max-h-[calc(100vh-var(--header-height)-3rem)] overflow-y-auto pr-1", "space-y-6")}>
+        {COURSE_STAGES.map((stage, stageIndex) => (
+          <section key={stage.id} aria-labelledby={`${mobile ? "drawer" : "sidebar"}-${stage.id}`}>
+            <h2
+              id={`${mobile ? "drawer" : "sidebar"}-${stage.id}`}
+              className="pb-2 font-mono text-[9px] font-normal uppercase tracking-[0.08em] text-[var(--color-smoke)]"
+            >
+              {String(stageIndex + 1).padStart(2, "0")} / {tCourse(`stage_${stage.id}`)}
+            </h2>
+            <ul className="space-y-px">
+              {stage.versions.map((versionId) => {
                 const href = `/${locale}/${versionId}`;
-                const active =
-                  pathname === href ||
-                  pathname === `${href}/` ||
-                  pathname.startsWith(`${href}/diff`);
-
+                const active = pathname === href || pathname === `${href}/`;
+                const status = getStatus(versionId as VersionId);
                 return (
                   <li key={versionId}>
                     <Link
@@ -53,13 +49,18 @@ export function Sidebar() {
                           : "border-transparent text-[var(--color-smoke)] hover:border-[var(--color-iron)] hover:text-[var(--color-chalk)]"
                       )}
                     >
-                      <span className="font-mono text-[11px] uppercase">
-                        {versionId}
-                      </span>
-                      <span className="truncate">{tSession(versionId)}</span>
-                      {active && (
-                        <span className="status-dot" aria-hidden="true" />
-                      )}
+                      <span className="font-mono text-[10px] uppercase">{versionId}</span>
+                      <span className="truncate text-xs">{tSession(versionId)}</span>
+                      <span className="sr-only">{tProgress(status)}</span>
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5",
+                          status === "read" && "bg-[var(--color-chalk)]",
+                          status === "current" && "rounded-full bg-[var(--color-accent)]",
+                          status === "unread" && "border border-[var(--color-iron)]"
+                        )}
+                        aria-hidden="true"
+                      />
                     </Link>
                   </li>
                 );

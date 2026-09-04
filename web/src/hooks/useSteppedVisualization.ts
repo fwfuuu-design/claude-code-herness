@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 interface SteppedVisualizationOptions {
   totalSteps: number;
@@ -26,6 +27,7 @@ export function useSteppedVisualization({
 }: SteppedVisualizationOptions): SteppedVisualizationReturn {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const next = useCallback(() => {
@@ -49,11 +51,16 @@ export function useSteppedVisualization({
   );
 
   const toggleAutoPlay = useCallback(() => {
+    if (reducedMotion) return;
     setIsPlaying((prev) => !prev);
-  }, []);
+  }, [reducedMotion]);
 
   useEffect(() => {
-    if (isPlaying) {
+    if (reducedMotion) setIsPlaying(false);
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (isPlaying && !reducedMotion) {
       intervalRef.current = setInterval(() => {
         setCurrentStep((prev) => {
           if (prev >= totalSteps - 1) {
@@ -67,7 +74,7 @@ export function useSteppedVisualization({
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isPlaying, totalSteps, autoPlayInterval]);
+  }, [isPlaying, totalSteps, autoPlayInterval, reducedMotion]);
 
   return {
     currentStep,

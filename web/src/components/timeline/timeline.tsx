@@ -1,178 +1,118 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { COURSE_STAGES, MILESTONE_VERSIONS, VERSION_META } from "@/lib/constants";
 import { useLocale, useTranslations } from "@/lib/i18n";
-import { LAYERS, LEARNING_PATH, VERSION_META } from "@/lib/constants";
-import { LayerBadge } from "@/components/ui/badge";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { ClearProgressButton } from "@/components/course/reading-progress";
+import type { VersionId } from "@/lib/constants";
 import versionsData from "@/data/generated/versions.json";
 
 function getVersionData(id: string) {
   return versionsData.versions.find((version) => version.id === id);
 }
 
-const MAX_LOC = Math.max(
-  ...versionsData.versions
-    .filter((version) =>
-      LEARNING_PATH.includes(version.id as (typeof LEARNING_PATH)[number])
-    )
-    .map((version) => version.loc)
-);
-
 export function Timeline() {
   const t = useTranslations("course");
   const tVersion = useTranslations("version");
   const tSession = useTranslations("sessions");
-  const tSubtitle = useTranslations("session_subtitles");
+  const tQuestion = useTranslations("session_questions");
   const tAddition = useTranslations("session_additions");
-  const tInsight = useTranslations("session_insights");
   const tLayer = useTranslations("layer_labels");
   const locale = useLocale();
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = !!useReducedMotion();
+  const { getStatus } = useReadingProgress();
+  const tProgress = useTranslations("progress");
 
   return (
-    <div className="flex flex-col gap-12">
-      <section aria-labelledby="topic-legend-heading">
-        <h2
-          id="topic-legend-heading"
-          className="mb-3 font-mono text-xs font-normal uppercase tracking-[0.08em] text-[var(--color-smoke)]"
-        >
-          {t("layer_legend")}
-        </h2>
-        <div className="flex flex-wrap gap-x-5 gap-y-3">
-          {LAYERS.map((layer, index) => (
-            <div key={layer.id} className="flex items-center gap-2">
-              <span
-                className="grid h-5 w-5 place-items-center border border-[var(--color-compass-gold)] font-mono text-[9px] text-[var(--color-ash)]"
-                aria-hidden="true"
-              >
-                {index + 1}
-              </span>
-              <span className="text-xs text-[var(--color-ash)]">
-                {tLayer(layer.id)}
-              </span>
-            </div>
-          ))}
+    <div>
+      <aside className="mb-16 grid gap-5 border border-[var(--color-border)] bg-[var(--color-carbon)] p-5 sm:grid-cols-[auto_1fr_auto] sm:items-start sm:p-6">
+        <span className="grid h-10 w-10 place-items-center border border-[var(--color-accent)] font-mono text-xs" aria-hidden="true">!</span>
+        <div>
+          <h2 className="font-display text-xl font-normal">{t("boundary_title")}</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[var(--color-smoke)]">{t("boundary_desc")}</p>
+          <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.05em] text-[var(--color-smoke)]">{tProgress("local_only")}</p>
         </div>
-      </section>
+        <ClearProgressButton />
+      </aside>
 
-      <div className="relative">
-        {LEARNING_PATH.map((versionId, index) => {
-          const meta = VERSION_META[versionId];
-          const data = getVersionData(versionId);
-          if (!data) return null;
+      <div className="space-y-20">
+        {COURSE_STAGES.map((stage, stageIndex) => (
+          <section key={stage.id} aria-labelledby={`course-stage-${stage.id}`}>
+            <header className="grid gap-5 border-t border-[var(--color-border)] pt-6 md:grid-cols-[4rem_1fr_1fr]">
+              <span className="font-mono text-xs text-[var(--color-accent)]">{String(stageIndex + 1).padStart(2, "0")}</span>
+              <h2 id={`course-stage-${stage.id}`} className="font-display text-3xl font-normal sm:text-4xl">
+                {t(`stage_${stage.id}`)}
+              </h2>
+              <p className="text-sm leading-relaxed text-[var(--color-smoke)] md:pt-1">{t(`stage_${stage.id}_desc`)}</p>
+            </header>
 
-          const last = index === LEARNING_PATH.length - 1;
-          const locPercent = Math.round((data.loc / MAX_LOC) * 100);
-
-          return (
-            <article key={versionId} className="relative flex gap-4 pb-8 sm:gap-6">
-              <div className="flex flex-col items-center" aria-hidden="true">
-                <div className="z-10 grid h-9 w-9 shrink-0 place-items-center border border-[var(--color-compass-gold)] bg-[var(--color-carbon)] font-mono text-[10px] text-[var(--color-chalk)] sm:h-10 sm:w-10">
-                  {versionId.toUpperCase()}
-                </div>
-                {!last && (
-                  <div className="w-px flex-1 bg-[var(--color-graphite)]" />
-                )}
+            <div className="relative mt-8 border-l border-[var(--color-graphite)] pl-5 sm:pl-8">
+              <div className="grid gap-4 lg:grid-cols-2">
+                {stage.versions.map((versionId, index) => {
+                  const data = getVersionData(versionId);
+                  const meta = VERSION_META[versionId];
+                  const milestone = MILESTONE_VERSIONS.includes(versionId as (typeof MILESTONE_VERSIONS)[number]);
+                  const status = getStatus(versionId as VersionId);
+                  return (
+                    <motion.article
+                      key={versionId}
+                      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-30px" }}
+                      transition={{ duration: reduceMotion ? 0 : 0.2, delay: reduceMotion ? 0 : index * 0.04 }}
+                      className="relative"
+                    >
+                      <span className="absolute -left-[1.6rem] top-7 h-2 w-2 bg-[var(--color-accent)] sm:-left-[2.25rem]" aria-hidden="true" />
+                      <Link
+                        href={`/${locale}/${versionId}`}
+                        className="group flex h-full min-h-72 flex-col border border-[var(--color-border)] bg-[var(--color-obsidian)] p-5 transition-colors hover:border-[var(--color-border-strong)] sm:p-6"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <span className="font-mono text-sm uppercase text-[var(--color-chalk)]">{versionId}</span>
+                            <span className="font-mono text-[10px] uppercase text-[var(--color-smoke)]">{tLayer(meta.layer)}</span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            {milestone && (
+                              <span className="border border-[var(--color-ash)] px-2 py-1 font-mono text-[9px] uppercase tracking-[0.06em]">{t("milestone")}</span>
+                            )}
+                            <span className="inline-flex items-center gap-2 font-mono text-[9px] uppercase text-[var(--color-smoke)]">
+                              <span className={status === "current" ? "status-dot" : status === "read" ? "h-2 w-2 bg-[var(--color-chalk)]" : "h-2 w-2 border border-[var(--color-iron)]"} aria-hidden="true" />
+                              {tProgress(status)}
+                            </span>
+                          </div>
+                        </div>
+                        <h3 className="mt-7 font-display text-2xl font-normal sm:text-3xl">{tSession(versionId)}</h3>
+                        <div className="mt-5 border-l border-[var(--color-graphite)] pl-4">
+                          <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--color-smoke)]">{t("core_question")}</p>
+                          <p className="mt-2 text-sm leading-relaxed text-[var(--color-ash)]">{tQuestion(versionId)}</p>
+                        </div>
+                        <div className="mt-auto flex flex-wrap items-end justify-between gap-4 pt-7">
+                          <div>
+                            <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-[var(--color-smoke)]">{t("new_mechanism")}</p>
+                            <p className="mt-1 text-sm text-[var(--color-chalk)]">{tAddition(versionId)}</p>
+                          </div>
+                          <div className="flex items-center gap-4 font-mono text-[10px] text-[var(--color-smoke)]">
+                            <span>{data?.loc ?? "—"} {tVersion("loc")}</span>
+                            <ArrowUpRight size={16} className="text-[var(--color-chalk)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.article>
+                  );
+                })}
               </div>
-
-              <div className="min-w-0 flex-1 pb-2">
-                <motion.div
-                  initial={reduceMotion ? false : { opacity: 0, x: 16 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: reduceMotion ? 0 : 0.2 }}
-                  className="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-surface)] p-4 transition-colors hover:border-[var(--color-border-strong)] sm:p-5"
-                >
-                  <div className="flex flex-wrap items-center gap-2">
-                    <LayerBadge layer={meta.layer}>{tLayer(meta.layer)}</LayerBadge>
-                    <span className="font-mono text-[11px] text-[var(--color-smoke)]">
-                      {tAddition(versionId)}
-                    </span>
-                  </div>
-
-                  <h3 className="mt-3 font-display text-lg font-normal text-[var(--color-chalk)]">
-                    {tSession(versionId)}
-                  </h3>
-                  <p className="mt-1 text-sm text-[var(--color-smoke)]">
-                    {tSubtitle(versionId)}
-                  </p>
-
-                  <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-[11px] text-[var(--color-smoke)]">
-                    <span className="tabular-nums">
-                      {data.loc} {tVersion("loc")}
-                    </span>
-                    <span className="tabular-nums">
-                      {data.tools.length} {tVersion("tools")}
-                    </span>
-                  </div>
-
-                  <div
-                    className="mt-2 h-px w-full bg-[var(--color-graphite)]"
-                    aria-hidden="true"
-                  >
-                    <div
-                      className="h-px bg-[var(--color-compass-gold)]"
-                      style={{ width: `${locPercent}%` }}
-                    />
-                  </div>
-
-                  <p className="mt-4 text-sm leading-relaxed text-[var(--color-smoke)]">
-                    {tInsight(versionId)}
-                  </p>
-
-                  <Link
-                    href={`/${locale}/${versionId}`}
-                    className="mt-4 inline-flex min-h-11 items-center gap-2 font-mono text-xs uppercase tracking-[0.06em] text-[var(--color-chalk)] transition-opacity hover:opacity-70"
-                  >
-                    {t("learn_more")}
-                    <span aria-hidden="true">→</span>
-                  </Link>
-                </motion.div>
-              </div>
-            </article>
-          );
-        })}
+            </div>
+          </section>
+        ))}
       </div>
 
-      <section aria-labelledby="source-scale-heading">
-        <h2
-          id="source-scale-heading"
-          className="mb-5 font-display text-xl font-normal"
-        >
-          {t("loc_growth")}
-        </h2>
-        <div className="flex flex-col gap-3">
-          {LEARNING_PATH.map((versionId) => {
-            const data = getVersionData(versionId);
-            if (!data) return null;
-            const widthPercent = Math.max(
-              2,
-              Math.round((data.loc / MAX_LOC) * 100)
-            );
-
-            return (
-              <div key={versionId} className="grid grid-cols-[2.5rem_1fr_3.5rem] items-center gap-3">
-                <span className="font-mono text-[11px] text-[var(--color-smoke)]">
-                  {versionId}
-                </span>
-                <div className="h-5 border border-[var(--color-graphite)] bg-[var(--color-carbon)]">
-                  <motion.div
-                    initial={reduceMotion ? false : { width: 0 }}
-                    whileInView={{ width: `${widthPercent}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: reduceMotion ? 0 : 0.4 }}
-                    className="h-full bg-[var(--color-compass-gold)]"
-                  />
-                </div>
-                <span className="text-right font-mono text-[10px] tabular-nums text-[var(--color-smoke)]">
-                  {data.loc}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+      <p className="mt-20 border-t border-[var(--color-border)] pt-6 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--color-smoke)]">
+        {t("open_access")}
+      </p>
     </div>
   );
 }
