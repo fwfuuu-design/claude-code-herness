@@ -1,8 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { LAYERS } from "@/lib/constants";
 import versionsData from "@/data/generated/versions.json";
 
 const CLASS_DESCRIPTIONS: Record<string, string> = {
@@ -26,50 +25,11 @@ interface ArchDiagramProps {
   version: string;
 }
 
-function getLayerColor(versionId: string): string {
-  const layer = LAYERS.find((l) => (l.versions as readonly string[]).includes(versionId));
-  return layer?.color ?? "#71717a";
-}
-
-function getLayerColorClasses(versionId: string): {
-  border: string;
-  bg: string;
-} {
-  const v =
-    versionsData.versions.find((v) => v.id === versionId) as { layer?: string } | undefined;
-  const layer = v?.layer;
-  switch (layer) {
-    case "tools":
-      return {
-        border: "border-blue-500",
-        bg: "bg-blue-500/10",
-      };
-    case "planning":
-      return {
-        border: "border-emerald-500",
-        bg: "bg-emerald-500/10",
-      };
-    case "memory":
-      return {
-        border: "border-purple-500",
-        bg: "bg-purple-500/10",
-      };
-    case "concurrency":
-      return {
-        border: "border-amber-500",
-        bg: "bg-amber-500/10",
-      };
-    case "collaboration":
-      return {
-        border: "border-red-500",
-        bg: "bg-red-500/10",
-      };
-    default:
-      return {
-        border: "border-zinc-500",
-        bg: "bg-zinc-500/10",
-      };
-  }
+function getNodeTone(): { border: string; bg: string } {
+  return {
+    border: "border-[var(--color-compass-gold)]",
+    bg: "bg-[var(--color-carbon)]",
+  };
 }
 
 function collectClassesForVersion(
@@ -101,6 +61,7 @@ function getNewClassNames(version: string): Set<string> {
 }
 
 export function ArchDiagram({ version }: ArchDiagramProps) {
+  const reduceMotion = useReducedMotion();
   const allClasses = collectClassesForVersion(version);
   const newClassNames = getNewClassNames(version);
   const versionData = versionsData.versions.find((v) => v.id === version);
@@ -112,7 +73,7 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
     <div className="space-y-3">
       {reversed.map((cls, i) => {
         const isNew = newClassNames.has(cls.name);
-        const colorClasses = getLayerColorClasses(cls.introducedIn);
+        const colorClasses = getNodeTone();
 
         return (
           <div key={cls.name}>
@@ -122,9 +83,9 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
                   width="24"
                   height="20"
                   viewBox="0 0 24 20"
-                  initial={{ opacity: 0 }}
+                  initial={reduceMotion ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.08 + 0.05 }}
+                  transition={{ delay: reduceMotion ? 0 : i * 0.08 + 0.05 }}
                 >
                   <motion.line
                     x1={12}
@@ -133,25 +94,25 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
                     y2={14}
                     stroke="var(--color-text-secondary)"
                     strokeWidth={1.5}
-                    initial={{ pathLength: 0 }}
+                    initial={reduceMotion ? false : { pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.3, delay: i * 0.08 }}
+                    transition={{ duration: reduceMotion ? 0 : 0.3, delay: reduceMotion ? 0 : i * 0.08 }}
                   />
                   <motion.polygon
                     points="7,12 12,19 17,12"
                     fill="var(--color-text-secondary)"
-                    initial={{ opacity: 0 }}
+                    initial={reduceMotion ? false : { opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: i * 0.08 + 0.2 }}
+                    transition={{ delay: reduceMotion ? 0 : i * 0.08 + 0.2 }}
                   />
                 </motion.svg>
               </div>
             )}
             <motion.div
             key={cls.name}
-            initial={{ opacity: 0, y: 20 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08, duration: 0.3 }}
+            transition={{ delay: reduceMotion ? 0 : i * 0.08, duration: reduceMotion ? 0 : 0.2 }}
             className={cn(
               "rounded-lg border-2 px-4 py-3 transition-colors",
               isNew
@@ -206,9 +167,9 @@ export function ArchDiagram({ version }: ArchDiagramProps) {
 
       {tools.length > 0 && (
         <motion.div
-          initial={{ opacity: 0 }}
+          initial={reduceMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: reversed.length * 0.08 + 0.1 }}
+          transition={{ delay: reduceMotion ? 0 : reversed.length * 0.08 + 0.1 }}
           className="flex flex-wrap gap-1.5 pt-2"
         >
           {tools.map((tool) => (

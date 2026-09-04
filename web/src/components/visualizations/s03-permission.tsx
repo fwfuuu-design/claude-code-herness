@@ -136,7 +136,7 @@ function RequestCard({
       layout
       animate={active ? { y: -1 } : { y: 0 }}
       className={cn(
-        "min-w-0 rounded-xl border p-4 shadow-sm",
+        "min-w-0 rounded-lg border p-4",
         active ? toneClass(request.tone) : "border-zinc-200 bg-white text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200",
         muted && "opacity-45"
       )}
@@ -255,7 +255,7 @@ function Outcome({ mode }: { mode: StepMode }) {
 
   if (mode === "allow") {
     return (
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("space-y-3 rounded-xl border p-4", toneClass("emerald"))}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("space-y-3 rounded-lg border p-4", toneClass("emerald"))}>
         <div className="flex items-center gap-2 text-base font-semibold">
           <PlayCircle size={17} />
           Handler runs now
@@ -268,7 +268,7 @@ function Outcome({ mode }: { mode: StepMode }) {
 
   if (mode === "ask") {
     return (
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("rounded-xl border p-4", toneClass("amber"))}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("rounded-lg border p-4", toneClass("amber"))}>
         <div className="mb-2 flex items-center gap-2 text-base font-semibold">
           <UserCheck size={17} />
           Approval ticket
@@ -280,7 +280,7 @@ function Outcome({ mode }: { mode: StepMode }) {
 
   if (mode === "ask-approved") {
     return (
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("space-y-3 rounded-xl border p-4", toneClass("blue"))}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("space-y-3 rounded-lg border p-4", toneClass("blue"))}>
         <div className="flex items-center gap-2 text-base font-semibold">
           <PlayCircle size={17} />
           Handler runs after approval
@@ -293,7 +293,7 @@ function Outcome({ mode }: { mode: StepMode }) {
 
   if (mode === "deny") {
     return (
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("rounded-xl border p-4", toneClass("red"))}>
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className={cn("rounded-lg border p-4", toneClass("red"))}>
         <div className="mb-2 flex items-center gap-2 text-base font-semibold">
           <OctagonAlert size={17} />
           Blocked before handler
@@ -314,7 +314,7 @@ function Outcome({ mode }: { mode: StepMode }) {
           <div className="text-xs leading-relaxed opacity-80">{request.detail}</div>
         </div>
       ))}
-      <div className={cn("rounded-xl border p-4", toneClass("emerald"))}>
+      <div className={cn("rounded-lg border p-4", toneClass("emerald"))}>
         <div className="mb-2 flex items-center gap-2 text-base font-semibold">
         <ShieldCheck size={17} />
           decision returned to loop

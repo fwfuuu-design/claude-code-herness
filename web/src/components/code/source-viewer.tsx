@@ -74,10 +74,10 @@ export function SourceViewer({ source, filename }: SourceViewerProps) {
   return (
     <div className="rounded-lg border border-zinc-200 dark:border-zinc-700">
       <div className="flex items-center gap-2 border-b border-zinc-200 px-4 py-2 dark:border-zinc-700">
-        <div className="flex gap-1.5">
-          <span className="h-3 w-3 rounded-full bg-red-400" />
-          <span className="h-3 w-3 rounded-full bg-yellow-400" />
-          <span className="h-3 w-3 rounded-full bg-green-400" />
+        <div className="flex gap-1.5" aria-hidden="true">
+          <span className="h-2.5 w-2.5 border border-[var(--color-iron)]" />
+          <span className="h-2.5 w-2.5 border border-[var(--color-iron)]" />
+          <span className="h-2.5 w-2.5 bg-[var(--color-compass-gold)]" />
         </div>
         <span className="font-mono text-xs text-zinc-400">{filename}</span>
       </div>

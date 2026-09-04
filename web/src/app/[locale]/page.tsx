@@ -5,33 +5,8 @@ import { useTranslations, useLocale } from "@/lib/i18n";
 import { LEARNING_PATH, VERSION_META, LAYERS } from "@/lib/constants";
 import { LayerBadge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import versionsData from "@/data/generated/versions.json";
 import { MessageFlow } from "@/components/architecture/message-flow";
-
-const LAYER_DOT_COLORS: Record<string, string> = {
-  tools: "bg-blue-500",
-  planning: "bg-emerald-500",
-  memory: "bg-purple-500",
-  concurrency: "bg-amber-500",
-  collaboration: "bg-red-500",
-};
-
-const LAYER_BORDER_COLORS: Record<string, string> = {
-  tools: "border-blue-500/30 hover:border-blue-500/60",
-  planning: "border-emerald-500/30 hover:border-emerald-500/60",
-  memory: "border-purple-500/30 hover:border-purple-500/60",
-  concurrency: "border-amber-500/30 hover:border-amber-500/60",
-  collaboration: "border-red-500/30 hover:border-red-500/60",
-};
-
-const LAYER_BAR_COLORS: Record<string, string> = {
-  tools: "bg-blue-500",
-  planning: "bg-emerald-500",
-  memory: "bg-purple-500",
-  concurrency: "bg-amber-500",
-  collaboration: "bg-red-500",
-};
 
 function getVersionData(id: string) {
   return versionsData.versions.find((v) => v.id === id);
@@ -39,6 +14,9 @@ function getVersionData(id: string) {
 
 export default function HomePage() {
   const t = useTranslations("home");
+  const tSession = useTranslations("sessions");
+  const tInsight = useTranslations("session_insights");
+  const tLayer = useTranslations("layer_labels");
   const locale = useLocale();
 
   return (
@@ -53,8 +31,8 @@ export default function HomePage() {
         </p>
         <div className="mt-8">
           <Link
-            href={`/${locale}/timeline`}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-lg bg-zinc-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+            href={`/${locale}/course`}
+            className="button-primary"
           >
             {t("start")}
             <span aria-hidden="true">&rarr;</span>
@@ -70,11 +48,11 @@ export default function HomePage() {
             {t("core_pattern_desc")}
           </p>
         </div>
-        <div className="mx-auto max-w-2xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950">
+        <div className="mx-auto max-w-2xl overflow-hidden rounded-lg border border-zinc-800 bg-zinc-950">
           <div className="flex items-center gap-2 border-b border-zinc-800 px-4 py-2.5">
-            <span className="h-3 w-3 rounded-full bg-red-500/70" />
-            <span className="h-3 w-3 rounded-full bg-yellow-500/70" />
-            <span className="h-3 w-3 rounded-full bg-green-500/70" />
+            <span className="h-2 w-2 border border-[var(--color-iron)]" />
+            <span className="h-2 w-2 border border-[var(--color-iron)]" />
+            <span className="h-2 w-2 bg-[var(--color-compass-gold)]" />
             <span className="ml-3 text-xs text-zinc-500">agent_loop.py</span>
           </div>
           <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
@@ -157,12 +135,7 @@ export default function HomePage() {
                 href={`/${locale}/${versionId}`}
                 className="group block"
               >
-                <Card
-                  className={cn(
-                    "h-full border transition-all duration-200",
-                    LAYER_BORDER_COLORS[meta.layer]
-                  )}
-                >
+                <Card className="h-full bg-transparent transition-colors">
                   <div className="flex items-start justify-between gap-2">
                     <LayerBadge layer={meta.layer}>{versionId}</LayerBadge>
                     <span className="text-xs tabular-nums text-[var(--color-text-secondary)]">
@@ -170,10 +143,10 @@ export default function HomePage() {
                     </span>
                   </div>
                   <h3 className="mt-3 text-sm font-semibold group-hover:underline">
-                    {meta.title}
+                    {tSession(versionId)}
                   </h3>
                   <p className="mt-1 text-xs text-[var(--color-text-secondary)]">
-                    {meta.keyInsight}
+                    {tInsight(versionId)}
                   </p>
                 </Card>
               </Link>
@@ -194,31 +167,25 @@ export default function HomePage() {
           {LAYERS.map((layer) => (
             <div
               key={layer.id}
-              className="flex items-center gap-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4"
+              className="flex items-center gap-4 rounded-[var(--radius-card)] border border-[var(--color-border)] bg-transparent p-4"
             >
-              <div
-                className={cn(
-                  "h-full w-1.5 self-stretch rounded-full",
-                  LAYER_BAR_COLORS[layer.id]
-                )}
-              />
+              <div className="w-px self-stretch bg-[var(--color-compass-gold)]" />
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold">{layer.label}</h3>
+                  <h3 className="text-sm font-medium">{tLayer(layer.id)}</h3>
                   <span className="text-xs text-[var(--color-text-secondary)]">
                     {layer.versions.length} {t("versions_in_layer")}
                   </span>
                 </div>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {layer.versions.map((vid) => {
-                    const meta = VERSION_META[vid];
                     return (
                       <Link key={vid} href={`/${locale}/${vid}`}>
                         <LayerBadge
                           layer={layer.id}
                           className="cursor-pointer transition-opacity hover:opacity-80"
                         >
-                          {vid}: {meta?.title}
+                          {vid}: {tSession(vid)}
                         </LayerBadge>
                       </Link>
                     );

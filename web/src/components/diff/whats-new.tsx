@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "@/lib/i18n";
 import { Card } from "@/components/ui/card";
 
@@ -18,6 +18,7 @@ interface WhatsNewProps {
 export function WhatsNew({ diff }: WhatsNewProps) {
   const t = useTranslations("version");
   const td = useTranslations("diff");
+  const reduceMotion = useReducedMotion();
 
   if (!diff) {
     return null;
@@ -40,9 +41,9 @@ export function WhatsNew({ diff }: WhatsNewProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         {diff.newClasses.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ delay: reduceMotion ? 0 : 0.1 }}
           >
             <Card className="h-full">
               <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
@@ -52,7 +53,7 @@ export function WhatsNew({ diff }: WhatsNewProps) {
                 {diff.newClasses.map((cls) => (
                   <div
                     key={cls}
-                    className="rounded-md bg-emerald-50 px-3 py-1.5 font-mono text-sm font-medium text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300"
+                    className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-3 py-1.5 font-mono text-sm text-[var(--color-chalk)]"
                   >
                     {cls}
                   </div>
@@ -64,9 +65,9 @@ export function WhatsNew({ diff }: WhatsNewProps) {
 
         {diff.newTools.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
+            transition={{ delay: reduceMotion ? 0 : 0.15 }}
           >
             <Card className="h-full">
               <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
@@ -76,7 +77,7 @@ export function WhatsNew({ diff }: WhatsNewProps) {
                 {diff.newTools.map((tool) => (
                   <span
                     key={tool}
-                    className="rounded-full bg-blue-50 px-3 py-1 font-mono text-xs font-medium text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+                    className="rounded-[var(--radius-label)] border border-[var(--color-graphite)] bg-[var(--color-carbon)] px-3 py-1 font-mono text-xs text-[var(--color-ash)]"
                   >
                     {tool}
                   </span>
@@ -88,9 +89,9 @@ export function WhatsNew({ diff }: WhatsNewProps) {
 
         {diff.newFunctions.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: reduceMotion ? 0 : 0.2 }}
           >
             <Card className="h-full">
               <h3 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
@@ -112,16 +113,16 @@ export function WhatsNew({ diff }: WhatsNewProps) {
 
         {diff.locDelta !== 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
+            transition={{ delay: reduceMotion ? 0 : 0.25 }}
           >
             <Card className="flex h-full items-center">
               <div>
                 <h3 className="mb-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                   {td("loc_delta")}
                 </h3>
-                <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                <p className="font-mono text-2xl text-[var(--color-chalk)]">
                   +{diff.locDelta} lines
                 </p>
               </div>

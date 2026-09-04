@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useLocale, useTranslations } from "@/lib/i18n";
-import { LEARNING_PATH, VERSION_META } from "@/lib/constants";
+import { useTranslations } from "@/lib/i18n";
+import { LEARNING_PATH, VERSION_META, type VersionId } from "@/lib/constants";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { LayerBadge } from "@/components/ui/badge";
 import { CodeDiff } from "@/components/diff/code-diff";
@@ -15,14 +15,16 @@ const data = versionData as VersionIndex;
 
 export default function ComparePage() {
   const t = useTranslations("compare");
-  const locale = useLocale();
+  const tSession = useTranslations("sessions");
+  const tSubtitle = useTranslations("session_subtitles");
+  const tLayer = useTranslations("layer_labels");
   const [versionA, setVersionA] = useState<string>("");
   const [versionB, setVersionB] = useState<string>("");
 
   const infoA = useMemo(() => data.versions.find((v) => v.id === versionA), [versionA]);
   const infoB = useMemo(() => data.versions.find((v) => v.id === versionB), [versionB]);
-  const metaA = versionA ? VERSION_META[versionA] : null;
-  const metaB = versionB ? VERSION_META[versionB] : null;
+  const metaA = versionA ? VERSION_META[versionA as VersionId] : null;
+  const metaB = versionB ? VERSION_META[versionB as VersionId] : null;
 
   const comparison = useMemo(() => {
     if (!infoA || !infoB) return null;
@@ -66,12 +68,12 @@ export default function ComparePage() {
           <select
             value={versionA}
             onChange={(e) => setVersionA(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
+            className="w-full rounded-[var(--radius-control)] border border-[var(--color-iron)] bg-[var(--color-carbon)] px-3 py-2 text-sm text-[var(--color-chalk)]"
           >
             <option value="">-- select --</option>
             {LEARNING_PATH.map((v) => (
               <option key={v} value={v}>
-                {v} - {VERSION_META[v]?.title}
+                {v} - {tSession(v)}
               </option>
             ))}
           </select>
@@ -86,12 +88,12 @@ export default function ComparePage() {
           <select
             value={versionB}
             onChange={(e) => setVersionB(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200"
+            className="w-full rounded-[var(--radius-control)] border border-[var(--color-iron)] bg-[var(--color-carbon)] px-3 py-2 text-sm text-[var(--color-chalk)]"
           >
             <option value="">-- select --</option>
             {LEARNING_PATH.map((v) => (
               <option key={v} value={v}>
-                {v} - {VERSION_META[v]?.title}
+                {v} - {tSession(v)}
               </option>
             ))}
           </select>
@@ -105,24 +107,24 @@ export default function ComparePage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Card>
               <CardHeader>
-                <CardTitle>{metaA?.title || versionA}</CardTitle>
-                <p className="text-sm text-zinc-500">{metaA?.subtitle}</p>
+                <CardTitle>{tSession(versionA)}</CardTitle>
+                <p className="text-sm text-zinc-500">{tSubtitle(versionA)}</p>
               </CardHeader>
               <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                 <p>{infoA.loc} LOC</p>
                 <p>{infoA.tools.length} tools</p>
-                {metaA && <LayerBadge layer={metaA.layer}>{metaA.layer}</LayerBadge>}
+                {metaA && <LayerBadge layer={metaA.layer}>{tLayer(metaA.layer)}</LayerBadge>}
               </div>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle>{metaB?.title || versionB}</CardTitle>
-                <p className="text-sm text-zinc-500">{metaB?.subtitle}</p>
+                <CardTitle>{tSession(versionB)}</CardTitle>
+                <p className="text-sm text-zinc-500">{tSubtitle(versionB)}</p>
               </CardHeader>
               <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
                 <p>{infoB.loc} LOC</p>
                 <p>{infoB.tools.length} tools</p>
-                {metaB && <LayerBadge layer={metaB.layer}>{metaB.layer}</LayerBadge>}
+                {metaB && <LayerBadge layer={metaB.layer}>{tLayer(metaB.layer)}</LayerBadge>}
               </div>
             </Card>
           </div>
@@ -133,13 +135,13 @@ export default function ComparePage() {
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
                 <h3 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  {metaA?.title || versionA}
+                  {tSession(versionA)}
                 </h3>
                 <ArchDiagram version={versionA} />
               </div>
               <div>
                 <h3 className="mb-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                  {metaB?.title || versionB}
+                  {tSession(versionB)}
                 </h3>
                 <ArchDiagram version={versionB} />
               </div>
@@ -156,7 +158,7 @@ export default function ComparePage() {
                 </div>
               </CardHeader>
               <CardTitle>
-                <span className={comparison.locDelta >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
+                <span className="font-mono text-[var(--color-chalk)]">
                   {comparison.locDelta >= 0 ? "+" : ""}{comparison.locDelta}
                 </span>
                 <span className="ml-2 text-sm font-normal text-zinc-500">{t("lines")}</span>
@@ -171,12 +173,12 @@ export default function ComparePage() {
                 </div>
               </CardHeader>
               <CardTitle>
-                <span className="text-blue-600 dark:text-blue-400">{comparison.toolsOnlyB.length}</span>
+                <span className="font-mono text-[var(--color-chalk)]">{comparison.toolsOnlyB.length}</span>
               </CardTitle>
               {comparison.toolsOnlyB.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {comparison.toolsOnlyB.map((tool) => (
-                    <span key={tool} className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    <span key={tool} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                       {tool}
                     </span>
                   ))}
@@ -192,12 +194,12 @@ export default function ComparePage() {
                 </div>
               </CardHeader>
               <CardTitle>
-                <span className="text-purple-600 dark:text-purple-400">{comparison.newClasses.length}</span>
+                <span className="font-mono text-[var(--color-chalk)]">{comparison.newClasses.length}</span>
               </CardTitle>
               {comparison.newClasses.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {comparison.newClasses.map((cls) => (
-                    <span key={cls} className="rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                    <span key={cls} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                       {cls}
                     </span>
                   ))}
@@ -213,12 +215,12 @@ export default function ComparePage() {
                 </div>
               </CardHeader>
               <CardTitle>
-                <span className="text-amber-600 dark:text-amber-400">{comparison.newFunctions.length}</span>
+                <span className="font-mono text-[var(--color-chalk)]">{comparison.newFunctions.length}</span>
               </CardTitle>
               {comparison.newFunctions.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
                   {comparison.newFunctions.map((fn) => (
-                    <span key={fn} className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                    <span key={fn} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                       {fn}
                     </span>
                   ))}
@@ -235,14 +237,14 @@ export default function ComparePage() {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div>
                 <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("only_in")} {metaA?.title || versionA}
+                  {t("only_in")} {tSession(versionA)}
                 </h4>
                 {comparison.toolsOnlyA.length === 0 ? (
                   <p className="text-xs text-zinc-400">{t("none")}</p>
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {comparison.toolsOnlyA.map((tool) => (
-                      <span key={tool} className="rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                      <span key={tool} className="rounded-[var(--radius-label)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-smoke)] line-through opacity-60">
                         {tool}
                       </span>
                     ))}
@@ -258,7 +260,7 @@ export default function ComparePage() {
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {comparison.toolsShared.map((tool) => (
-                      <span key={tool} className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                      <span key={tool} className="rounded-[var(--radius-label)] border border-[var(--color-graphite)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                         {tool}
                       </span>
                     ))}
@@ -267,14 +269,14 @@ export default function ComparePage() {
               </div>
               <div>
                 <h4 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                  {t("only_in")} {metaB?.title || versionB}
+                  {t("only_in")} {tSession(versionB)}
                 </h4>
                 {comparison.toolsOnlyB.length === 0 ? (
                   <p className="text-xs text-zinc-400">{t("none")}</p>
                 ) : (
                   <div className="flex flex-wrap gap-1">
                     {comparison.toolsOnlyB.map((tool) => (
-                      <span key={tool} className="rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                      <span key={tool} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-chalk)]">
                         {tool}
                       </span>
                     ))}

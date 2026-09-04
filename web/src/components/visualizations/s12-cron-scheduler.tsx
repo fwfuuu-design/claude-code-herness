@@ -102,7 +102,7 @@ function ScheduleCard({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -8, scale: 0.98 }}
       transition={{ duration: 0.25 }}
-      className={cn("rounded-md border p-3 shadow-sm", toneClass)}
+      className={cn("rounded-md border p-3", toneClass)}
     >
       <div className="font-mono text-xs font-semibold">{title}</div>
       <div className="mt-1 text-xs opacity-80">{subtitle}</div>
@@ -131,7 +131,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
             <motion.div
               animate={step >= 2 ? { scale: [1, 1.08, 1] } : { scale: 1 }}
               transition={{ duration: 1.1, repeat: step >= 2 && step <= 4 ? Infinity : 0 }}
-              className="rounded-md bg-white px-2 py-1 font-mono text-xs text-zinc-600 shadow-sm dark:bg-zinc-900 dark:text-zinc-300"
+              className="rounded-md border border-zinc-200 bg-white px-2 py-1 font-mono text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
             >
               {step < 2 ? "08:59" : "09:00"}
             </motion.div>

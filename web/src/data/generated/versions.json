@@ -3,8 +3,6 @@
     {
       "id": "s01",
       "filename": "s01_agent_loop/code.py",
-      "title": "The Agent Loop",
-      "subtitle": "One Loop Is All You Need",
       "loc": 106,
       "tools": [
         "bash"
@@ -12,8 +10,6 @@
       "newTools": [
         "bash"
       ],
-      "coreAddition": "Minimal model/tool loop",
-      "keyInsight": "The smallest useful agent is a loop that calls the model, runs tools, and feeds results back.",
       "classes": [],
       "functions": [
         {
@@ -39,8 +35,6 @@
     {
       "id": "s02",
       "filename": "s02_tool_use/code.py",
-      "title": "Tool Use",
-      "subtitle": "Add a Tool, Add Just One Line",
       "loc": 145,
       "tools": [
         "bash",
@@ -55,8 +49,6 @@
         "edit_file",
         "glob"
       ],
-      "coreAddition": "Tool dispatch map",
-      "keyInsight": "The loop stays stable while capabilities register into a dispatch table.",
       "classes": [],
       "functions": [
         {
@@ -107,8 +99,6 @@
     {
       "id": "s03",
       "filename": "s03_permission/code.py",
-      "title": "Permission",
-      "subtitle": "Check Permissions Before Execution",
       "loc": 181,
       "tools": [
         "bash",
@@ -118,8 +108,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Permission gate",
-      "keyInsight": "Dangerous actions need a harness decision point before the shell runs.",
       "classes": [],
       "functions": [
         {
@@ -189,8 +177,6 @@
     {
       "id": "s04",
       "filename": "s04_hooks/code.py",
-      "title": "Hooks",
-      "subtitle": "Hang on the Loop, Don't Write into It",
       "loc": 203,
       "tools": [
         "bash",
@@ -200,8 +186,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Lifecycle hooks",
-      "keyInsight": "Cross-cutting behavior belongs around the loop, not tangled inside it.",
       "classes": [],
       "functions": [
         {
@@ -282,8 +266,6 @@
     {
       "id": "s05",
       "filename": "s05_todo_write/code.py",
-      "title": "TodoWrite",
-      "subtitle": "An Agent Without a Plan Drifts Off Course",
       "loc": 280,
       "tools": [
         "bash",
@@ -296,8 +278,6 @@
       "newTools": [
         "todo_write"
       ],
-      "coreAddition": "Todo manager",
-      "keyInsight": "Explicit plans keep long-running work visible and correctable.",
       "classes": [
         {
           "name": "TodoManager",
@@ -389,8 +369,6 @@
     {
       "id": "s06",
       "filename": "s06_subagent/code.py",
-      "title": "Subagent",
-      "subtitle": "Break Large Tasks into Small Ones with Clean Context",
       "loc": 287,
       "tools": [
         "bash",
@@ -403,8 +381,6 @@
       "newTools": [
         "task"
       ],
-      "coreAddition": "Isolated subtask context",
-      "keyInsight": "Subagents give each subtask a clean message history while preserving the main thread.",
       "classes": [],
       "functions": [
         {
@@ -500,8 +476,6 @@
     {
       "id": "s07",
       "filename": "s07_skill_loading/code.py",
-      "title": "Skill Loading",
-      "subtitle": "Load Only When Needed",
       "loc": 302,
       "tools": [
         "bash",
@@ -514,8 +488,6 @@
       "newTools": [
         "load_skill"
       ],
-      "coreAddition": "On-demand skill loader",
-      "keyInsight": "Inject specialized knowledge only when the task actually needs it.",
       "classes": [
         {
           "name": "SkillLoader",
@@ -612,8 +584,6 @@
     {
       "id": "s08",
       "filename": "s08_context_compact/code.py",
-      "title": "Context Compact",
-      "subtitle": "Context Will Fill Up",
       "loc": 423,
       "tools": [
         "bash",
@@ -623,8 +593,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Context compaction",
-      "keyInsight": "Compression keeps the conversation usable when the context window gets crowded.",
       "classes": [
         {
           "name": "ContextCompactor",
@@ -722,8 +690,6 @@
     {
       "id": "s09",
       "filename": "s09_memory/code.py",
-      "title": "Memory",
-      "subtitle": "Keep a Layer That Doesn't Lose Details",
       "loc": 669,
       "tools": [
         "bash",
@@ -733,8 +699,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Durable memory layer",
-      "keyInsight": "Some facts should survive summarization and future sessions.",
       "classes": [],
       "functions": [
         {
@@ -934,8 +898,6 @@
     {
       "id": "s10",
       "filename": "s10_task_system/code.py",
-      "title": "Task System",
-      "subtitle": "Break Big Goals into Small Tasks",
       "loc": 463,
       "tools": [
         "bash",
@@ -958,8 +920,6 @@
         "claim_task",
         "complete_task"
       ],
-      "coreAddition": "Task board",
-      "keyInsight": "A task graph turns vague goals into ordered, observable work.",
       "classes": [
         {
           "name": "Task",
@@ -1135,8 +1095,6 @@
     {
       "id": "s11",
       "filename": "s11_background_tasks/code.py",
-      "title": "Background Tasks",
-      "subtitle": "Slow Operations Go to the Background",
       "loc": 401,
       "tools": [
         "bash",
@@ -1146,8 +1104,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Background execution",
-      "keyInsight": "The agent can keep reasoning while slow work completes elsewhere.",
       "classes": [
         {
           "name": "BackgroundManager",
@@ -1289,8 +1245,6 @@
     {
       "id": "s12",
       "filename": "s12_cron_scheduler/code.py",
-      "title": "Cron Scheduler",
-      "subtitle": "Producing Work on a Schedule",
       "loc": 639,
       "tools": [
         "bash",
@@ -1300,8 +1254,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Scheduled task creation",
-      "keyInsight": "Recurring work should be created by the harness, not remembered by the model.",
       "classes": [
         {
           "name": "CronJob",
@@ -1508,8 +1460,6 @@
     {
       "id": "s13",
       "filename": "s13_agent_teams/code.py",
-      "title": "Agent Team Runtime",
-      "subtitle": "Persistent Teammates, Atomic Claims, Task-Bound Worktrees",
       "loc": 1589,
       "tools": [
         "bash",
@@ -1519,8 +1469,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Team runtime with task-bound worktrees",
-      "keyInsight": "Persistent teammates can reliably discover and execute parallel work when the runtime owns messaging, atomic claims, and task-bound working directories.",
       "classes": [
         {
           "name": "Task",
@@ -1935,8 +1883,6 @@
     {
       "id": "s14",
       "filename": "s14_mcp_plugin/code.py",
-      "title": "MCP Tools",
-      "subtitle": "External Tools, Standard Protocol",
       "loc": 441,
       "tools": [
         "bash",
@@ -1946,8 +1892,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "MCP tool bridge",
-      "keyInsight": "External services can become agent tools through a standard discovery and call protocol.",
       "classes": [
         {
           "name": "MCPClient",
@@ -2074,8 +2018,6 @@
     {
       "id": "s15",
       "filename": "s15_integrated_harness/code.py",
-      "title": "Integrated Harness",
-      "subtitle": "Many Mechanisms, One Loop",
       "loc": 2684,
       "tools": [
         "bash",
@@ -2128,8 +2070,6 @@
         "create_worktree",
         "connect_mcp"
       ],
-      "coreAddition": "Integrated harness",
-      "keyInsight": "The integrated harness is still one loop, surrounded by the systems introduced across the course.",
       "classes": [
         {
           "name": "ConsoleBroker",
@@ -2856,8 +2796,6 @@
     {
       "id": "s16",
       "filename": "s16_workflow_runtime/code.py",
-      "title": "Workflow Runtime",
-      "subtitle": "Scripts Own Fixed Orchestration",
       "loc": 722,
       "tools": [
         "bash",
@@ -2891,8 +2829,6 @@
       "newTools": [
         "Workflow"
       ],
-      "coreAddition": "Resumable workflow runtime",
-      "keyInsight": "When orchestration has a fixed shape, code can make it parallel, deterministic, and resumable.",
       "classes": [
         {
           "name": "WorkflowInputError",
@@ -3079,8 +3015,6 @@
     {
       "id": "s17",
       "filename": "s17_goal_loop/code.py",
-      "title": "Goal Loop",
-      "subtitle": "Independent Evaluation Decides When to Stop",
       "loc": 788,
       "tools": [
         "bash",
@@ -3090,8 +3024,6 @@
         "glob"
       ],
       "newTools": [],
-      "coreAddition": "Goal completion gate",
-      "keyInsight": "A durable goal keeps the loop working until an independent evaluator finds the completion condition satisfied in the conversation.",
       "classes": [
         {
           "name": "GoalError",

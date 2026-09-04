@@ -265,7 +265,7 @@ function PacketLine({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.22 }}
-      className={cn("min-w-0 rounded-md border px-3 py-2 shadow-sm", toneClass)}
+      className={cn("min-w-0 rounded-md border px-3 py-2", toneClass)}
     >
       <div className="font-mono text-[10px] uppercase tracking-normal opacity-70">{label}</div>
       <div className="mt-1 break-words text-sm font-medium leading-snug">{value}</div>

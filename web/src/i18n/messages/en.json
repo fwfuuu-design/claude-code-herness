@@ -15,7 +15,8 @@
     "open_menu": "Open navigation menu",
     "close_menu": "Close navigation menu",
     "github": "View the source on GitHub",
-    "skip_to_content": "Skip to content"
+    "skip_to_content": "Skip to content",
+    "primary_navigation": "Primary navigation"
   },
   "home": {
     "hero_title": "Harness",
@@ -70,6 +71,7 @@
     "learn_more": "Open Lesson"
   },
   "topics": {
+    "eyebrow": "05 / SYSTEM BUSES",
     "title": "Topics",
     "subtitle": "Explore the 17 lessons by mechanism instead of reading order",
     "tools": "How the model acts: the loop, tool dispatch, permission boundaries, and lifecycle hooks.",

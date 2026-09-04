@@ -10,12 +10,12 @@ const NODE_HEIGHT = 44;
 const DIAMOND_WIDTH = 92;
 const DIAMOND_HEIGHT = 64;
 
-const LAYER_COLORS: Record<string, string> = {
-  start: "#3B82F6",
-  process: "#10B981",
-  decision: "#F59E0B",
-  subprocess: "#8B5CF6",
-  end: "#EF4444",
+const NODE_STROKES: Record<string, string> = {
+  start: "#c1c1c1",
+  process: "#9c9c9c",
+  decision: "#6f6759",
+  subprocess: "#c1c1c1",
+  end: "#98ff38",
 };
 
 function getNodeLines(node: FlowNode): string[] {
@@ -209,7 +209,7 @@ function getEdgeLabelPosition(from: FlowNode, to: FlowNode): { x: number; y: num
 }
 
 function NodeShape({ node }: { node: FlowNode }) {
-  const color = LAYER_COLORS[node.type];
+  const color = NODE_STROKES[node.type];
   const { lines, width, height } = getNodeMetrics(node);
 
   if (node.type === "decision") {
@@ -372,7 +372,7 @@ export function ExecutionFlow({ version }: ExecutionFlowProps) {
 
   if (!flow) {
     return (
-      <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
+      <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
         Execution flow is not available for this lesson yet.
       </div>
     );
@@ -384,7 +384,7 @@ export function ExecutionFlow({ version }: ExecutionFlowProps) {
   const maxY = Math.max(...bounds.map((b) => b.bottom)) + 50;
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
+    <div className="overflow-x-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
       <svg
         viewBox={`${minX} 0 ${maxX - minX} ${maxY}`}
         className="mx-auto w-full max-w-[720px]"

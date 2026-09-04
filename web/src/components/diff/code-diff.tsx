@@ -24,25 +24,29 @@ export function CodeDiff({ oldSource, newSource, oldLabel, newLabel }: CodeDiffP
           {" -> "}
           <span className="font-medium text-zinc-700 dark:text-zinc-300">{newLabel}</span>
         </div>
-        <div className="flex shrink-0 rounded-lg border border-zinc-200 dark:border-zinc-700">
+        <div className="flex shrink-0 rounded-[var(--radius-control)] border border-[var(--color-border)]">
           <button
+            type="button"
+            aria-pressed={viewMode === "unified"}
             onClick={() => setViewMode("unified")}
             className={cn(
-              "min-h-[36px] px-3 text-xs font-medium transition-colors",
+              "min-h-11 px-3 text-xs font-medium transition-colors",
               viewMode === "unified"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400"
+                ? "bg-[var(--color-chalk)] text-[var(--color-carbon)]"
+                : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
             )}
           >
             Unified
           </button>
           <button
+            type="button"
+            aria-pressed={viewMode === "split"}
             onClick={() => setViewMode("split")}
             className={cn(
-              "min-h-[36px] px-3 text-xs font-medium transition-colors sm:inline-flex hidden",
+              "hidden min-h-11 px-3 text-xs font-medium transition-colors sm:inline-flex",
               viewMode === "split"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400"
+                ? "bg-[var(--color-chalk)] text-[var(--color-carbon)]"
+                : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
             )}
           >
             Split
@@ -86,8 +90,8 @@ function UnifiedView({ changes }: { changes: Change[] }) {
             <tr
               key={i}
               className={cn(
-                row.type === "add" && "bg-green-50 dark:bg-green-950/30",
-                row.type === "remove" && "bg-red-50 dark:bg-red-950/30"
+                row.type === "add" && "border-l-2 border-l-[var(--color-compass-gold)]",
+                row.type === "remove" && "opacity-60"
               )}
             >
               <td className="w-10 select-none border-r border-zinc-200 px-2 text-right text-zinc-400 dark:border-zinc-700 dark:text-zinc-600">
@@ -97,14 +101,14 @@ function UnifiedView({ changes }: { changes: Change[] }) {
                 {row.newNum ?? ""}
               </td>
               <td className="w-4 select-none px-1 text-center">
-                {row.type === "add" && <span className="text-green-600 dark:text-green-400">+</span>}
-                {row.type === "remove" && <span className="text-red-600 dark:text-red-400">-</span>}
+                {row.type === "add" && <span className="text-[var(--color-chalk)]">+</span>}
+                {row.type === "remove" && <span className="text-[var(--color-smoke)]">−</span>}
               </td>
               <td className="whitespace-pre px-2">
                 <span
                   className={cn(
-                    row.type === "add" && "text-green-800 dark:text-green-300",
-                    row.type === "remove" && "text-red-800 dark:text-red-300",
+                    row.type === "add" && "text-[var(--color-chalk)]",
+                    row.type === "remove" && "text-[var(--color-smoke)] line-through",
                     row.type === "context" && "text-zinc-700 dark:text-zinc-300"
                   )}
                 >
@@ -172,10 +176,10 @@ function SplitView({ changes }: { changes: Change[] }) {
   const cellClass = (type: string) =>
     cn(
       "whitespace-pre px-2",
-      type === "add" && "bg-green-50 text-green-800 dark:bg-green-950/30 dark:text-green-300",
-      type === "remove" && "bg-red-50 text-red-800 dark:bg-red-950/30 dark:text-red-300",
+      type === "add" && "border-l-2 border-l-[var(--color-compass-gold)] text-[var(--color-chalk)]",
+      type === "remove" && "text-[var(--color-smoke)] line-through opacity-60",
       type === "context" && "text-zinc-700 dark:text-zinc-300",
-      type === "empty" && "bg-zinc-50 dark:bg-zinc-900"
+      type === "empty" && "bg-[var(--color-carbon)]"
     );
 
   return (

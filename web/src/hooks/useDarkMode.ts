@@ -37,39 +37,19 @@ export interface SvgPalette {
 }
 
 export function useSvgPalette(): SvgPalette {
-  const isDark = useDarkMode();
-
-  if (isDark) {
-    return {
-      nodeFill: "#27272a",
-      nodeStroke: "#3f3f46",
-      nodeText: "#d4d4d8",
-      activeNodeFill: "#3b82f6",
-      activeNodeStroke: "#2563eb",
-      activeNodeText: "#ffffff",
-      endNodeFill: "#a855f7",
-      endNodeStroke: "#9333ea",
-      edgeStroke: "#52525b",
-      activeEdgeStroke: "#3b82f6",
-      arrowFill: "#71717a",
-      labelFill: "#a1a1aa",
-      bgSubtle: "#18181b",
-    };
-  }
-
   return {
-    nodeFill: "#e2e8f0",
-    nodeStroke: "#cbd5e1",
-    nodeText: "#475569",
-    activeNodeFill: "#3b82f6",
-    activeNodeStroke: "#2563eb",
-    activeNodeText: "#ffffff",
-    endNodeFill: "#a855f7",
-    endNodeStroke: "#9333ea",
-    edgeStroke: "#cbd5e1",
-    activeEdgeStroke: "#3b82f6",
-    arrowFill: "#94a3b8",
-    labelFill: "#94a3b8",
-    bgSubtle: "#f8fafc",
+    nodeFill: "#151515",
+    nodeStroke: "#474747",
+    nodeText: "#c1c1c1",
+    activeNodeFill: "#212121",
+    activeNodeStroke: "#6f6759",
+    activeNodeText: "#f3f3f3",
+    endNodeFill: "#080808",
+    endNodeStroke: "#98ff38",
+    edgeStroke: "#474747",
+    activeEdgeStroke: "#6f6759",
+    arrowFill: "#9c9c9c",
+    labelFill: "#9c9c9c",
+    bgSubtle: "#101010",
   };
 }

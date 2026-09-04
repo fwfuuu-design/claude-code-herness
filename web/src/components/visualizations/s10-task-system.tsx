@@ -91,7 +91,7 @@ function TaskCardView({ task }: { task: TaskCard }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.22 }}
-      className={cn("rounded-md border p-3 shadow-sm", statusClass(task.status))}
+      className={cn("rounded-md border p-3", statusClass(task.status))}
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <div className="font-mono text-xs font-semibold">{task.id}</div>

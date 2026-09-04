@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "@/lib/i18n";
 import { useSimulator } from "@/hooks/useSimulator";
 import { SimulatorControls } from "./simulator-controls";
@@ -34,6 +34,7 @@ interface AgentLoopSimulatorProps {
 
 export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
   const t = useTranslations("version");
+  const reduceMotion = useReducedMotion();
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -67,16 +68,16 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
-        behavior: "smooth",
+        behavior: reduceMotion ? "auto" : "smooth",
       });
     }
-  }, [sim.visibleSteps.length]);
+  }, [reduceMotion, sim.visibleSteps.length]);
 
   if (!scenario) {
     return (
       <section>
         <h2 className="mb-2 text-xl font-semibold">{t("simulator")}</h2>
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
           Simulator scenario is not available for this lesson yet.
         </div>
       </section>
@@ -90,8 +91,8 @@ export function AgentLoopSimulator({ version }: AgentLoopSimulatorProps) {
         {scenario.description}
       </p>
 
-      <div className="overflow-hidden rounded-xl border border-[var(--color-border)]">
-        <div className="border-b border-[var(--color-border)] bg-zinc-50 px-4 py-3 dark:bg-zinc-900">
+      <div className="overflow-hidden rounded-lg border border-[var(--color-border)]">
+        <div className="border-b border-[var(--color-border)] bg-[var(--color-carbon)] px-4 py-3">
           <SimulatorControls
             isPlaying={sim.isPlaying}
             isComplete={sim.isComplete}

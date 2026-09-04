@@ -39,35 +39,39 @@ export function SimulatorControls({
         {isPlaying ? (
           <button
             onClick={onPause}
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-signal-white)] text-[var(--color-carbon)] transition-opacity hover:opacity-80"
             title={t("pause")}
+            aria-label={t("pause")}
           >
-            <Pause size={16} />
+            <Pause size={16} aria-hidden="true" />
           </button>
         ) : (
           <button
             onClick={onPlay}
             disabled={isComplete}
-            className="flex h-9 w-9 items-center justify-center rounded-lg bg-zinc-900 text-white transition-colors hover:bg-zinc-700 disabled:opacity-40 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-signal-white)] text-[var(--color-carbon)] transition-opacity hover:opacity-80 disabled:opacity-40"
             title={t("play")}
+            aria-label={t("play")}
           >
-            <Play size={16} />
+            <Play size={16} aria-hidden="true" />
           </button>
         )}
         <button
           onClick={onStep}
           disabled={isComplete}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] transition-colors hover:bg-zinc-100 disabled:opacity-40 dark:hover:bg-zinc-800"
+          className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-iron)] transition-colors hover:border-[var(--color-ash)] disabled:opacity-40"
           title={t("step")}
+          aria-label={t("step")}
         >
-          <SkipForward size={16} />
+          <SkipForward size={16} aria-hidden="true" />
         </button>
         <button
           onClick={onReset}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-iron)] transition-colors hover:border-[var(--color-ash)]"
           title={t("reset")}
+          aria-label={t("reset")}
         >
-          <RotateCcw size={16} />
+          <RotateCcw size={16} aria-hidden="true" />
         </button>
       </div>
 
@@ -80,10 +84,10 @@ export function SimulatorControls({
             key={s}
             onClick={() => onSpeedChange(s)}
             className={cn(
-              "rounded px-2 py-1 text-xs font-medium transition-colors",
+              "min-h-11 rounded-[var(--radius-label)] px-2 text-xs font-medium transition-colors",
               speed === s
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+                ? "border border-[var(--color-chalk)] bg-[var(--color-chalk)] text-[var(--color-carbon)]"
+                : "border border-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
             )}
           >
             {s}x

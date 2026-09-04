@@ -113,7 +113,7 @@ export default function SubagentIsolation({ title }: { title?: string }) {
         {/* Main layout: two containers side by side */}
         <div className="relative flex gap-4" style={{ minHeight: 340 }}>
           {/* Parent agent loop */}
-          <div className="flex-1 rounded-xl border-2 border-blue-300 bg-blue-50/50 p-4 dark:border-blue-700 dark:bg-blue-950/20">
+          <div className="flex-1 rounded-lg border-2 border-blue-300 bg-blue-50/50 p-4 dark:border-blue-700 dark:bg-blue-950/20">
             <div className="mb-3 flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-blue-500" />
               <span className="text-sm font-bold text-blue-700 dark:text-blue-300">
@@ -132,7 +132,7 @@ export default function SubagentIsolation({ title }: { title?: string }) {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -12 }}
                     transition={{ duration: 0.4, delay: msg.id === "summary" ? 0.3 : 0 }}
-                    className={`rounded-lg px-3 py-2 text-xs font-medium text-white shadow-sm ${msg.color}`}
+                    className={`rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-white ${msg.color}`}
                   >
                     {msg.label}
                   </motion.div>
@@ -168,7 +168,7 @@ export default function SubagentIsolation({ title }: { title?: string }) {
 
           {/* Nested subagent loop */}
           <div
-            className={`flex-1 rounded-xl border-2 p-4 transition-colors duration-300 ${
+            className={`flex-1 rounded-lg border-2 p-4 transition-colors duration-300 ${
               showChildEmpty
                 ? "border-dashed border-zinc-300 bg-zinc-50/50 dark:border-zinc-600 dark:bg-zinc-800/30"
                 : childDiscarded
@@ -223,7 +223,7 @@ export default function SubagentIsolation({ title }: { title?: string }) {
                     animate={{ opacity: childFaded ? 0.3 : 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     transition={{ duration: 0.4 }}
-                    className={`rounded-lg px-3 py-2 text-xs font-medium text-white shadow-sm ${msg.color}`}
+                    className={`rounded-lg border border-zinc-700 px-3 py-2 text-xs font-medium text-white ${msg.color}`}
                   >
                     {msg.label}
                   </motion.div>
@@ -263,7 +263,7 @@ export default function SubagentIsolation({ title }: { title?: string }) {
                 className="pointer-events-none absolute left-0 top-0"
                 style={{ zIndex: 10 }}
               >
-                <div className="rounded-lg bg-purple-500 px-3 py-1.5 text-xs font-medium text-white shadow-lg">
+                <div className="rounded-lg border border-purple-400 bg-purple-500 px-3 py-1.5 text-xs font-medium text-white">
                   task prompt
                 </div>
               </motion.div>
@@ -280,7 +280,7 @@ export default function SubagentIsolation({ title }: { title?: string }) {
                 className="pointer-events-none absolute left-0 top-0"
                 style={{ zIndex: 10 }}
               >
-                <div className="rounded-lg bg-teal-500 px-3 py-1.5 text-xs font-medium text-white shadow-lg">
+                <div className="rounded-lg border border-teal-400 bg-teal-500 px-3 py-1.5 text-xs font-medium text-white">
                   summary
                 </div>
               </motion.div>

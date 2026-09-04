@@ -262,7 +262,7 @@ export default function ContextCompact({ title }: { title?: string }) {
               Context Window
             </div>
             <div
-              className="relative w-20 max-w-full overflow-hidden rounded-xl border-2 border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 sm:w-24"
+              className="relative w-20 max-w-full overflow-hidden rounded-lg border-2 border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 sm:w-24"
               style={{ height: WINDOW_HEIGHT }}
             >
               {/* Blocks stacked from bottom up */}

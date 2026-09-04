@@ -130,7 +130,7 @@ function Surface({
 
 function QuoteCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white p-4 text-lg leading-relaxed text-zinc-700 shadow-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
+    <div className="rounded-lg border border-zinc-200 bg-white p-4 text-lg leading-relaxed text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200">
       {children}
     </div>
   );
@@ -175,7 +175,7 @@ function MemoryDetail({ file, selected }: { file: MemoryFile; selected: boolean 
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "rounded-xl border p-4 shadow-sm",
+        "rounded-lg border p-4",
         selected
           ? "border-violet-300 bg-violet-50 dark:border-violet-800 dark:bg-violet-950/40"
           : "border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900"
@@ -289,7 +289,7 @@ export default function MemoryVisualization({ title }: { title?: string }) {
                 </motion.div>
               )}
               {injected && (
-                <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
                   <div className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-100">
                     Reading stack before LLM
                   </div>
@@ -317,7 +317,7 @@ export default function MemoryVisualization({ title }: { title?: string }) {
           className="mt-3"
         >
           <div className="grid min-w-0 gap-3 lg:grid-cols-[320px_minmax(0,1fr)]">
-            <div className="min-w-0 rounded-xl border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-800/70">
+            <div className="min-w-0 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-800/70">
               <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
                 <FileText size={16} />
                 MEMORY.md catalog

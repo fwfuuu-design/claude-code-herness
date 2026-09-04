@@ -15,7 +15,8 @@
     "open_menu": "打开导航菜单",
     "close_menu": "关闭导航菜单",
     "github": "在 GitHub 查看源码",
-    "skip_to_content": "跳到主要内容"
+    "skip_to_content": "跳到主要内容",
+    "primary_navigation": "主导航"
   },
   "home": {
     "hero_title": "Harness",
@@ -70,6 +71,7 @@
     "learn_more": "进入本章"
   },
   "topics": {
+    "eyebrow": "05 / 系统总线",
     "title": "主题",
     "subtitle": "跳出阅读顺序，按机制探索 17 章课程",
     "tools": "模型如何行动：循环、工具分发、权限边界与生命周期 Hooks。",

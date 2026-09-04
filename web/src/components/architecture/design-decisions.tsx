@@ -137,7 +137,7 @@ export function DesignDecisions({ version }: DesignDecisionsProps) {
     return (
       <div className="space-y-4">
         <h2 className="text-xl font-semibold">{t("design_decisions")}</h2>
-        <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
+        <div className="rounded-lg border border-dashed border-[var(--color-border)] bg-[var(--color-bg)] p-6 text-sm text-[var(--color-text-secondary)]">
           Design decisions are not available for this lesson yet.
         </div>
       </div>

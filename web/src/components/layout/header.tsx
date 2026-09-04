@@ -112,7 +112,7 @@ export function Header() {
           Harness
         </Link>
 
-        <nav className="hidden h-full items-center gap-8 md:flex" aria-label={t("home")}>
+        <nav className="hidden h-full items-center gap-8 md:flex" aria-label={t("primary_navigation")}>
           {NAV_ITEMS.map((item) => {
             const active = isActive(item);
             return (
@@ -173,7 +173,7 @@ export function Header() {
           id="mobile-navigation"
           className="border-b border-[var(--color-border)] bg-[var(--color-carbon)] px-4 pb-6 pt-3 md:hidden"
         >
-          <nav className="mx-auto max-w-[var(--page-max)]" aria-label={t("home")}>
+          <nav className="mx-auto max-w-[var(--page-max)]" aria-label={t("primary_navigation")}>
             {NAV_ITEMS.map((item) => {
               const active = isActive(item);
               return (

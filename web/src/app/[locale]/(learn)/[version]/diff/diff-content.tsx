@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
-import { useLocale } from "@/lib/i18n";
+import { useLocale, useTranslations } from "@/lib/i18n";
 import { VERSION_META } from "@/lib/constants";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { LayerBadge } from "@/components/ui/badge";
@@ -19,7 +19,11 @@ interface DiffPageContentProps {
 
 export function DiffPageContent({ version }: DiffPageContentProps) {
   const locale = useLocale();
-  const meta = VERSION_META[version];
+  const tNav = useTranslations("nav");
+  const tSession = useTranslations("sessions");
+  const tSubtitle = useTranslations("session_subtitles");
+  const tLayer = useTranslations("layer_labels");
+  const meta = VERSION_META[version as keyof typeof VERSION_META];
 
   const { currentVersion, prevVersion, diff } = useMemo(() => {
     const current = data.versions.find((v) => v.id === version);
@@ -33,8 +37,8 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
     return (
       <div className="py-12 text-center">
         <p className="text-zinc-500">Version not found.</p>
-        <Link href={`/${locale}/timeline`} className="mt-4 inline-block text-sm text-blue-600 hover:underline">
-          Back to timeline
+        <Link href={`/${locale}/course`} className="mt-4 inline-block text-sm text-[var(--color-chalk)] underline decoration-[var(--color-compass-gold)]">
+          Back to {tNav("course")}
         </Link>
       </div>
     );
@@ -48,17 +52,15 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
           className="mb-6 inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
         >
           <ArrowLeft size={14} />
-          Back to {meta.title}
+          Back to {tSession(version)}
         </Link>
-        <h1 className="text-3xl font-bold">{meta.title}</h1>
+        <h1 className="text-3xl font-normal">{tSession(version)}</h1>
         <p className="mt-4 text-zinc-500">
           This is the first version -- there is no previous version to compare against.
         </p>
       </div>
     );
   }
-
-  const prevMeta = VERSION_META[prevVersion.id];
 
   return (
     <div className="py-4">
@@ -67,13 +69,13 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
         className="mb-6 inline-flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
       >
         <ArrowLeft size={14} />
-        Back to {meta.title}
+        Back to {tSession(version)}
       </Link>
 
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold">
-          {prevMeta?.title || prevVersion.id} → {meta.title}
+          {tSession(prevVersion.id)} → {tSession(version)}
         </h1>
         <p className="mt-2 text-zinc-500 dark:text-zinc-400">
           {prevVersion.id} ({prevVersion.loc} LOC) → {version} ({currentVersion.loc} LOC)
@@ -90,7 +92,7 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
             </div>
           </CardHeader>
           <CardTitle>
-            <span className={diff.locDelta >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
+            <span className="font-mono text-[var(--color-chalk)]">
               {diff.locDelta >= 0 ? "+" : ""}{diff.locDelta}
             </span>
             <span className="ml-2 text-sm font-normal text-zinc-500">lines</span>
@@ -105,12 +107,12 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
             </div>
           </CardHeader>
           <CardTitle>
-            <span className="text-blue-600 dark:text-blue-400">{diff.newTools.length}</span>
+            <span className="font-mono text-[var(--color-chalk)]">{diff.newTools.length}</span>
           </CardTitle>
           {diff.newTools.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
               {diff.newTools.map((tool) => (
-                <span key={tool} className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                <span key={tool} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                   {tool}
                 </span>
               ))}
@@ -126,12 +128,12 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
             </div>
           </CardHeader>
           <CardTitle>
-            <span className="text-purple-600 dark:text-purple-400">{diff.newClasses.length}</span>
+            <span className="font-mono text-[var(--color-chalk)]">{diff.newClasses.length}</span>
           </CardTitle>
           {diff.newClasses.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
               {diff.newClasses.map((cls) => (
-                <span key={cls} className="rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                <span key={cls} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                   {cls}
                 </span>
               ))}
@@ -147,12 +149,12 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
             </div>
           </CardHeader>
           <CardTitle>
-            <span className="text-amber-600 dark:text-amber-400">{diff.newFunctions.length}</span>
+            <span className="font-mono text-[var(--color-chalk)]">{diff.newFunctions.length}</span>
           </CardTitle>
           {diff.newFunctions.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
               {diff.newFunctions.map((fn) => (
-                <span key={fn} className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                <span key={fn} className="rounded-[var(--radius-label)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-1.5 py-0.5 text-xs text-[var(--color-ash)]">
                   {fn}
                 </span>
               ))}
@@ -163,26 +165,26 @@ export function DiffPageContent({ version }: DiffPageContentProps) {
 
       {/* Version Info Comparison */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Card className="border-l-4 border-l-red-300 dark:border-l-red-700">
+        <Card className="border-l-2 border-l-[var(--color-smoke)] opacity-70">
           <CardHeader>
-            <CardTitle>{prevMeta?.title || prevVersion.id}</CardTitle>
-            <p className="text-sm text-zinc-500">{prevMeta?.subtitle}</p>
+            <CardTitle>{tSession(prevVersion.id)}</CardTitle>
+            <p className="text-sm text-zinc-500">{tSubtitle(prevVersion.id)}</p>
           </CardHeader>
           <div className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
             <p>{prevVersion.loc} LOC</p>
             <p>{prevVersion.tools.length} tools: {prevVersion.tools.join(", ")}</p>
-            <LayerBadge layer={prevVersion.layer}>{prevVersion.layer}</LayerBadge>
+            <LayerBadge layer={prevVersion.layer}>{tLayer(prevVersion.layer)}</LayerBadge>
           </div>
         </Card>
-        <Card className="border-l-4 border-l-green-300 dark:border-l-green-700">
+        <Card className="border-l-2 border-l-[var(--color-compass-gold)]">
           <CardHeader>
-            <CardTitle>{meta.title}</CardTitle>
-            <p className="text-sm text-zinc-500">{meta.subtitle}</p>
+            <CardTitle>{tSession(version)}</CardTitle>
+            <p className="text-sm text-zinc-500">{tSubtitle(version)}</p>
           </CardHeader>
           <div className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
             <p>{currentVersion.loc} LOC</p>
             <p>{currentVersion.tools.length} tools: {currentVersion.tools.join(", ")}</p>
-            <LayerBadge layer={currentVersion.layer}>{currentVersion.layer}</LayerBadge>
+            <LayerBadge layer={currentVersion.layer}>{tLayer(currentVersion.layer)}</LayerBadge>
           </div>
         </Card>
       </div>
