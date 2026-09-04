@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Bot, CalendarDays, CheckCircle2, Clock3, Database, Inbox } from "lucide-react";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { cn } from "@/lib/utils";
 
@@ -72,7 +73,7 @@ function Panel({
         >
           {icon}
         </span>
-        {title}
+        <VisualizationText text={title} />
       </div>
       {children}
     </div>
@@ -104,8 +105,8 @@ function ScheduleCard({
       transition={{ duration: 0.25 }}
       className={cn("rounded-md border p-3", toneClass)}
     >
-      <div className="font-mono text-xs font-semibold">{title}</div>
-      <div className="mt-1 text-xs opacity-80">{subtitle}</div>
+      <div className="font-mono text-xs font-semibold"><VisualizationText text={title} /></div>
+      <div className="mt-1 text-xs opacity-80"><VisualizationText text={subtitle} /></div>
     </motion.div>
   );
 }
@@ -126,7 +127,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
           <div className="mb-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-zinc-800 dark:text-zinc-100">
               <CalendarDays size={16} />
-              Weekly clock
+              <VisualizationText text="Weekly clock" />
             </div>
             <motion.div
               animate={step >= 2 ? { scale: [1, 1.08, 1] } : { scale: 1 }}
@@ -147,7 +148,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
                     : "border-zinc-200 bg-white text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400"
                 )}
               >
-                {day}
+                <VisualizationText text={day} />
               </div>
             ))}
           </div>
@@ -173,7 +174,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
                 )}
               </AnimatePresence>
               <div className="rounded-md border border-dashed border-zinc-300 px-3 py-4 text-center text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                {step >= 1 ? "stored schedules stay here" : "no saved schedule yet"}
+                <VisualizationText text={step >= 1 ? "stored schedules stay here" : "no saved schedule yet"} />
               </div>
             </div>
           </Panel>
@@ -185,7 +186,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
           >
             <div className="space-y-3">
               <div className="rounded-md border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300">
-                watcher: {step >= 2 ? "running" : "waiting"}
+                <VisualizationText text="watcher" />: <VisualizationText text={step >= 2 ? "running" : "waiting"} />
               </div>
               <AnimatePresence>
                 {step >= 3 && step <= 4 && (
@@ -198,7 +199,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
               </AnimatePresence>
               {step < 3 && (
                 <div className="rounded-md border border-dashed border-zinc-300 px-3 py-8 text-center text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                  queue is empty
+                  <VisualizationText text="queue is empty" />
                 </div>
               )}
               {step === 5 && (
@@ -224,7 +225,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
               </AnimatePresence>
               <div className="flex items-center gap-2 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                 {step >= 5 ? <CheckCircle2 size={14} /> : <Bot size={14} />}
-                {step >= 5 ? "review summary saved" : "agent loop available"}
+                <VisualizationText text={step >= 5 ? "review summary saved" : "agent loop available"} />
               </div>
             </div>
           </Panel>
@@ -241,6 +242,7 @@ export default function CronSchedulerVisualization({ title }: { title?: string }
           onToggleAutoPlay={vis.toggleAutoPlay}
           stepTitle={current.title}
           stepDescription={current.desc}
+          version="s12"
         />
       </div>
     </section>

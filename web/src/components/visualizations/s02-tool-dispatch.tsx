@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 import { useSvgPalette } from "@/hooks/useDarkMode";
 
 // -- Tool definitions --
@@ -119,7 +120,7 @@ export default function ToolDispatch({ title }: { title?: string }) {
         {/* Incoming request display */}
         <div className="mb-4 flex min-h-[32px] items-center gap-2">
           <span className="shrink-0 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            Incoming:
+            <VisualizationText text="Incoming:" />
           </span>
           <AnimatePresence mode="wait">
             {request && (
@@ -141,7 +142,7 @@ export default function ToolDispatch({ title }: { title?: string }) {
                 animate={{ opacity: 0.6 }}
                 className="text-xs text-zinc-400 dark:text-zinc-600"
               >
-                waiting for tool_call...
+                <VisualizationText text="waiting for tool_call..." />
               </motion.span>
             )}
             {isAllActive && (
@@ -151,7 +152,7 @@ export default function ToolDispatch({ title }: { title?: string }) {
                 animate={{ opacity: 1 }}
                 className="text-xs font-medium text-emerald-600 dark:text-emerald-400"
               >
-                All routes active
+                <VisualizationText text="All routes active" />
               </motion.span>
             )}
           </AnimatePresence>
@@ -303,7 +304,7 @@ export default function ToolDispatch({ title }: { title?: string }) {
                   animate={{ fill: isActive ? "rgba(255,255,255,0.8)" : palette.labelFill }}
                   transition={{ duration: 0.4 }}
                 >
-                  {tool.desc}
+                  <VisualizationText text={tool.desc} />
                 </motion.text>
               </g>
             );
@@ -374,6 +375,7 @@ export default function ToolDispatch({ title }: { title?: string }) {
         onToggleAutoPlay={toggleAutoPlay}
         stepTitle={stepInfo.title}
         stepDescription={stepInfo.desc}
+        version="s02"
       />
     </section>
   );

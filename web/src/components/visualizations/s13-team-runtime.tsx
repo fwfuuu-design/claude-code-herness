@@ -12,6 +12,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +68,7 @@ function StateBadge({
 
   return (
     <span className={cn("shrink-0 whitespace-nowrap rounded px-2 py-1 text-[11px] font-semibold", classes)}>
-      {label}
+      <VisualizationText text={label} />
     </span>
   );
 }
@@ -82,21 +83,21 @@ function RuntimePanel({ step }: { step: number }) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           <UsersRound size={16} className="shrink-0 text-blue-500" />
-          <span className="break-words">Team runtime</span>
+          <span className="break-words"><VisualizationText text="Team runtime" /></span>
         </div>
         <StateBadge label={state} tone={tone} />
       </div>
 
       <div className="mt-4 grid grid-cols-[88px_minmax(0,1fr)] gap-x-2 gap-y-3 text-xs">
-        <span className="text-zinc-500 dark:text-zinc-400">Lead</span>
+        <span className="text-zinc-500 dark:text-zinc-400"><VisualizationText text="Lead" /></span>
         <span className="break-words font-medium text-zinc-800 dark:text-zinc-200">
-          {step === 0 ? "proposes roles" : step === 5 ? "receives result" : "coordinates"}
+          <VisualizationText text={step === 0 ? "proposes roles" : step === 5 ? "receives result" : "coordinates"} />
         </span>
-        <span className="text-zinc-500 dark:text-zinc-400">Teammate</span>
+        <span className="text-zinc-500 dark:text-zinc-400"><VisualizationText text="Teammate" /></span>
         <span className="break-words font-medium text-zinc-800 dark:text-zinc-200">
-          backend
+          <VisualizationText text="backend" />
         </span>
-        <span className="text-zinc-500 dark:text-zinc-400">Protocol</span>
+        <span className="text-zinc-500 dark:text-zinc-400"><VisualizationText text="Protocol" /></span>
         <span className="break-all font-mono text-zinc-700 dark:text-zinc-300">
           {step < 2 ? "-" : "request_id=req_000007"}
         </span>
@@ -105,13 +106,13 @@ function RuntimePanel({ step }: { step: number }) {
       <div className="mt-4 flex min-h-[72px] items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-xs text-blue-800 dark:border-blue-900 dark:bg-blue-950/30 dark:text-blue-200">
         <Inbox size={15} className="mt-0.5 shrink-0" />
         <span className="break-words leading-relaxed">
-          {step === 0
+          <VisualizationText text={step === 0
             ? "No mailbox is created before confirmation."
             : step === 2
               ? "The approval is tied to the claimed task and work version."
               : step === 5
                 ? "The result wakes the Lead; IDLE releases the cwd lease."
-                : "The runtime owns delivery while the teammate works."}
+                : "The runtime owns delivery while the teammate works."} />
         </span>
       </div>
     </div>
@@ -128,7 +129,7 @@ function TaskPanel({ step }: { step: number }) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           <ClipboardList size={16} className="shrink-0 text-amber-500" />
-          <span>Task board</span>
+          <span><VisualizationText text="Task board" /></span>
         </div>
         <StateBadge label={status} tone={tone} />
       </div>
@@ -138,11 +139,11 @@ function TaskPanel({ step }: { step: number }) {
           task_1a2b3c4d
         </div>
         <div className="mt-1 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          Refactor authentication
+          <VisualizationText text="Refactor authentication" />
         </div>
         <div className="mt-3 grid grid-cols-[76px_minmax(0,1fr)] gap-2 text-xs">
-          <span className="text-zinc-500 dark:text-zinc-400">owner</span>
-          <span className="font-mono text-zinc-700 dark:text-zinc-300">{owner}</span>
+          <span className="text-zinc-500 dark:text-zinc-400"><VisualizationText text="owner" /></span>
+          <span className="font-mono text-zinc-700 dark:text-zinc-300"><VisualizationText text={owner} /></span>
           <span className="text-zinc-500 dark:text-zinc-400">blockedBy</span>
           <span className="font-mono text-zinc-700 dark:text-zinc-300">[]</span>
         </div>
@@ -158,11 +159,11 @@ function TaskPanel({ step }: { step: number }) {
       >
         {step < 1 ? <Search size={15} className="shrink-0" /> : <LockKeyhole size={15} className="shrink-0" />}
         <span className="break-words">
-          {step < 1
+          <VisualizationText text={step < 1
             ? "Waiting for the teammate loop."
             : step === 1
               ? "The claim check and update share one lock."
-              : "The claimed task remains owned through the work turn."}
+              : "The claimed task remains owned through the work turn."} />
         </span>
       </div>
     </div>
@@ -178,7 +179,7 @@ function WorkspacePanel({ step }: { step: number }) {
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
           <GitBranch size={16} className="shrink-0 text-emerald-500" />
-          <span>Task directory</span>
+          <span><VisualizationText text="Task directory" /></span>
         </div>
         <StateBadge
           label={routed ? "active cwd" : retained ? "binding retained" : "reserved"}
@@ -196,10 +197,10 @@ function WorkspacePanel({ step }: { step: number }) {
           )}
         >
           <div className="font-mono text-xs font-semibold text-zinc-800 dark:text-zinc-200">
-            repository root
+            <VisualizationText text="repository root" />
           </div>
           <div className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
-            coordination state
+            <VisualizationText text="coordination state" />
           </div>
         </div>
         <motion.div
@@ -216,11 +217,11 @@ function WorkspacePanel({ step }: { step: number }) {
             .worktrees/auth-refactor
           </div>
           <div className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
-            {routed
+            <VisualizationText text={routed
               ? "bash / read / write cwd"
               : retained
                 ? "task binding remains after IDLE"
-                : "task.worktree binding"}
+                : "task.worktree binding"} />
           </div>
         </motion.div>
       </div>
@@ -228,11 +229,11 @@ function WorkspacePanel({ step }: { step: number }) {
       <div className="mt-3 flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-300">
         {routed ? <Terminal size={15} /> : <GitBranch size={15} />}
         <span>
-          {routed
+          <VisualizationText text={routed
             ? "Tools follow the claimed task."
             : retained
               ? "IDLE released active tool routing."
-              : "No implicit directory switching."}
+              : "No implicit directory switching."} />
         </span>
       </div>
     </div>
@@ -260,7 +261,7 @@ export default function TeamRuntime({ title }: { title?: string }) {
         <div className="mt-3 rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-700 dark:bg-zinc-900">
           <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             <CheckCircle2 size={14} />
-            Runtime events
+            <VisualizationText text="Runtime events" />
           </div>
           <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {EVENTS.map((event, index) => {
@@ -278,7 +279,7 @@ export default function TeamRuntime({ title }: { title?: string }) {
                       : "border-zinc-200 bg-zinc-50 text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                   )}
                 >
-                  {event}
+                  <VisualizationText text={event} />
                 </motion.div>
               );
             })}
@@ -296,6 +297,7 @@ export default function TeamRuntime({ title }: { title?: string }) {
           onToggleAutoPlay={vis.toggleAutoPlay}
           stepTitle={current.title}
           stepDescription={current.desc}
+          version="s13"
         />
       </div>
     </section>

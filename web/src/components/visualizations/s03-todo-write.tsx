@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 
 // -- Task definitions --
 
@@ -103,7 +104,7 @@ function KanbanColumn({
       <div
         className={`flex items-center justify-center gap-1 rounded-t-lg px-3 py-2 text-center text-xs font-bold uppercase tracking-wider ${headerBg}`}
       >
-        <span className="min-w-0 break-words">{title}</span>
+        <span className="min-w-0 break-words"><VisualizationText text={title} /></span>
         <span className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${accentClass}`}>
           {tasks.length}
         </span>
@@ -156,11 +157,11 @@ function TaskCard({ task }: { task: Task }) {
         <span
           className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${statusStyles[task.status]}`}
         >
-          {task.status.replace("_", " ")}
+          <VisualizationText text={task.status.replace("_", " ")} />
         </span>
       </div>
       <div className="break-words text-xs font-medium leading-snug text-zinc-700 dark:text-zinc-300">
-        {task.label}
+        <VisualizationText text={task.label} />
       </div>
     </motion.div>
   );
@@ -184,7 +185,7 @@ function NagGauge({ value, max, firing }: { value: number; max: number; firing: 
     <div className="space-y-1">
       <div className="flex items-center justify-between">
         <span className="text-xs font-medium text-zinc-600 dark:text-zinc-300">
-          Nag Timer
+          <VisualizationText text="Nag Timer" />
         </span>
         <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
           {value}/{max}
@@ -257,7 +258,7 @@ export default function TodoWrite({ title }: { title?: string }) {
                 exit={{ opacity: 0, y: -8, height: 0 }}
                 className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-center text-xs font-bold text-red-700 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300"
               >
-                SYSTEM: "You have pending tasks. Pick one up now!"
+                <VisualizationText text={'SYSTEM: "You have pending tasks. Pick one up now!"'} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -288,7 +289,7 @@ export default function TodoWrite({ title }: { title?: string }) {
         {/* Progress summary */}
         <div className="mt-3 flex items-center justify-between rounded-md bg-zinc-100 px-3 py-2 dark:bg-zinc-800">
           <span className="font-mono text-[11px] text-zinc-500 dark:text-zinc-400">
-            Progress: {doneTasks.length}/{tasks.length} complete
+            <VisualizationText text="Progress" />: {doneTasks.length}/{tasks.length} <VisualizationText text="complete" />
           </span>
           <div className="flex gap-0.5">
             {tasks.map((t) => (
@@ -317,6 +318,7 @@ export default function TodoWrite({ title }: { title?: string }) {
         onToggleAutoPlay={toggleAutoPlay}
         stepTitle={stepInfo.title}
         stepDescription={stepInfo.desc}
+        version="s05"
       />
     </section>
   );

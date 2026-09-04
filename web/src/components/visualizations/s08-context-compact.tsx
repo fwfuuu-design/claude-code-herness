@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 
 type BlockType = "user" | "assistant" | "tool_result";
 
@@ -259,7 +260,7 @@ export default function ContextCompact({ title }: { title?: string }) {
           {/* Token Window (tall vertical bar on the left) */}
           <div className="min-w-0 flex flex-col items-center">
             <div className="mb-2 font-mono text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
-              Context Window
+              <VisualizationText text="Context Window" />
             </div>
             <div
               className="relative w-20 max-w-full overflow-hidden rounded-lg border-2 border-zinc-300 bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 sm:w-24"
@@ -288,7 +289,7 @@ export default function ContextCompact({ title }: { title?: string }) {
                     >
                       {block.heightPx >= 14 && (
                         <span className="truncate px-1 text-[8px] font-medium text-white">
-                          {block.label}
+                          <VisualizationText text={block.label} />
                         </span>
                       )}
                     </motion.div>
@@ -328,7 +329,7 @@ export default function ContextCompact({ title }: { title?: string }) {
             <div>
               <div className="mb-1 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                 <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Token usage
+                  <VisualizationText text="Token usage" />
                 </span>
                 <span className="break-words font-mono text-xs text-zinc-500 dark:text-zinc-400">
                   {state.tokenCount.toLocaleString()} / {MAX_TOKENS.toLocaleString()}
@@ -347,11 +348,11 @@ export default function ContextCompact({ title }: { title?: string }) {
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-1">
                 <div className="h-3 w-3 rounded bg-blue-500" />
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400">user</span>
+                <span className="text-[10px] text-zinc-500 dark:text-zinc-400"><VisualizationText text="user" /></span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-3 w-3 rounded bg-zinc-500" />
-                <span className="text-[10px] text-zinc-500 dark:text-zinc-400">assistant</span>
+                <span className="text-[10px] text-zinc-500 dark:text-zinc-400"><VisualizationText text="assistant" /></span>
               </div>
               <div className="flex items-center gap-1">
                 <div className="h-3 w-3 rounded bg-emerald-500" />
@@ -376,14 +377,14 @@ export default function ContextCompact({ title }: { title?: string }) {
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-semibold">{layer.label}</span>
+                      <span className="text-sm font-semibold"><VisualizationText text={layer.label} /></span>
                       <span className="rounded bg-white/70 px-1.5 py-0.5 font-mono text-[10px] dark:bg-zinc-900/60">
-                        {reached ? "used" : "waiting"}
+                        <VisualizationText text={reached ? "used" : "waiting"} />
                       </span>
                     </div>
                     <div className="mt-2 space-y-1 text-[11px] leading-snug">
-                      <div className="break-words font-mono">{layer.trigger}</div>
-                      <div className="break-words opacity-80">{layer.action}</div>
+                      <div className="break-words font-mono"><VisualizationText text={layer.trigger} /></div>
+                      <div className="break-words opacity-80"><VisualizationText text={layer.action} /></div>
                     </div>
                   </motion.div>
                 );
@@ -400,10 +401,10 @@ export default function ContextCompact({ title }: { title?: string }) {
                   className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 dark:border-amber-700 dark:bg-amber-900/20"
                 >
                   <div className="text-xs font-semibold text-amber-700 dark:text-amber-300">
-                    tool_results are the largest blocks
+                    <VisualizationText text="tool_results are the largest blocks" />
                   </div>
                   <div className="text-[11px] leading-snug text-amber-600 dark:text-amber-400">
-                    File contents, command outputs, search results -- each one is thousands of tokens.
+                    <VisualizationText text="File contents, command outputs, search results -- each one is thousands of tokens." />
                   </div>
                 </motion.div>
               )}
@@ -433,7 +434,7 @@ export default function ContextCompact({ title }: { title?: string }) {
                           ? "text-blue-600 dark:text-blue-300"
                           : "text-emerald-600 dark:text-emerald-300"
                     }`}>
-                      {state.compressionLabel}
+                      <VisualizationText text={state.compressionLabel} />
                     </div>
                     <div className={`mt-1 text-xs leading-snug ${
                       currentStep === 3
@@ -442,9 +443,9 @@ export default function ContextCompact({ title }: { title?: string }) {
                           ? "text-blue-500 dark:text-blue-400"
                           : "text-emerald-500 dark:text-emerald-400"
                     }`}>
-                      {currentStep === 3 && "Old tool_results shrunk to tiny summaries"}
-                      {currentStep === 5 && "Full conversation compressed to summary block"}
-                      {currentStep === 6 && "Most aggressive compression -- near-empty context"}
+                      {currentStep === 3 && <VisualizationText text="Old tool_results shrunk to tiny summaries" />}
+                      {currentStep === 5 && <VisualizationText text="Full conversation compressed to summary block" />}
+                      {currentStep === 6 && <VisualizationText text="Most aggressive compression -- near-empty context" />}
                     </div>
                   </div>
                 </motion.div>
@@ -465,10 +466,10 @@ export default function ContextCompact({ title }: { title?: string }) {
                     className={`flex flex-col gap-1 rounded px-3 py-2 sm:flex-row sm:items-center sm:justify-between ${layer.classes}`}
                   >
                     <span className="break-words text-xs">
-                      Stage {index + 1}: {layer.label} -- {layer.action}
+                      <VisualizationText text="Stage" /> {index + 1}: <VisualizationText text={layer.label} /> — <VisualizationText text={layer.action} />
                     </span>
                     <span className="shrink-0 font-mono text-[10px] opacity-80">
-                      {layer.trigger}
+                      <VisualizationText text={layer.trigger} />
                     </span>
                   </div>
                 ))}
@@ -489,6 +490,7 @@ export default function ContextCompact({ title }: { title?: string }) {
             onToggleAutoPlay={toggleAutoPlay}
             stepTitle={STEPS[currentStep].title}
             stepDescription={STEPS[currentStep].description}
+            version="s08"
           />
         </div>
       </div>

@@ -2,7 +2,8 @@
 
 import { Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { useTranslations } from "@/lib/i18n";
+import { localizeVisualizationStep } from "@/data/visualization-localization";
+import { useLocale, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 interface StepControlsProps {
@@ -15,6 +16,7 @@ interface StepControlsProps {
   onToggleAutoPlay: () => void;
   stepTitle: string;
   stepDescription: string;
+  version?: string;
   className?: string;
 }
 
@@ -28,10 +30,16 @@ export function StepControls({
   onToggleAutoPlay,
   stepTitle,
   stepDescription,
+  version,
   className,
 }: StepControlsProps) {
   const t = useTranslations("sim");
+  const locale = useLocale();
   const reducedMotion = usePrefersReducedMotion();
+  const localizedStep = localizeVisualizationStep(locale, version, currentStep, {
+    title: stepTitle,
+    description: stepDescription,
+  });
   const controlClass =
     "flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-control)] border border-transparent text-[var(--color-smoke)] transition-colors hover:border-[var(--color-iron)] hover:text-[var(--color-chalk)] disabled:opacity-30";
 
@@ -39,10 +47,10 @@ export function StepControls({
     <div className={cn("space-y-3", className)}>
       <div className="rounded-[var(--radius-card)] border border-[var(--color-graphite)] border-l-2 border-l-[var(--color-compass-gold)] bg-[var(--color-carbon)] px-4 py-3">
         <div className="mb-1 text-sm font-medium text-[var(--color-chalk)]">
-          {stepTitle}
+          {localizedStep.title}
         </div>
         <div className="text-sm text-[var(--color-smoke)]">
-          {stepDescription}
+          {localizedStep.description}
         </div>
       </div>
 

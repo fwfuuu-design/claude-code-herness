@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 import { useSvgPalette } from "@/hooks/useDarkMode";
 
 // -- Flowchart node definitions --
@@ -243,7 +244,7 @@ export default function AgentLoop({ title }: { title?: string }) {
                         textAnchor="middle"
                         className="fill-zinc-400 text-[10px] dark:fill-zinc-500"
                       >
-                        {edge.label}
+                        <VisualizationText text={edge.label} />
                       </text>
                     )}
                   </g>
@@ -292,7 +293,7 @@ export default function AgentLoop({ title }: { title?: string }) {
                         animate={{ fill: isActive ? palette.activeNodeText : palette.nodeText }}
                         transition={{ duration: 0.4 }}
                       >
-                        {node.label}
+                        <VisualizationText text={node.label} />
                       </motion.text>
                     </g>
                   );
@@ -326,7 +327,7 @@ export default function AgentLoop({ title }: { title?: string }) {
                       animate={{ fill: isActive ? palette.activeNodeText : palette.nodeText }}
                       transition={{ duration: 0.4 }}
                     >
-                      {node.label}
+                      <VisualizationText text={node.label} />
                     </motion.text>
                   </g>
                 );
@@ -344,7 +345,7 @@ export default function AgentLoop({ title }: { title?: string }) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
-                  iter #2
+                  <VisualizationText text="iter #2" />
                 </motion.text>
               )}
             </svg>
@@ -365,7 +366,7 @@ export default function AgentLoop({ title }: { title?: string }) {
                     exit={{ opacity: 0 }}
                     className="py-8 text-center text-xs text-zinc-400 dark:text-zinc-600"
                   >
-                    [ empty ]
+                    <VisualizationText text="[ empty ]" />
                   </motion.div>
                 )}
                 {visibleMessages.map((msg, i) => (
@@ -378,10 +379,10 @@ export default function AgentLoop({ title }: { title?: string }) {
                     className={`rounded-md px-3 py-2 ${msg.colorClass}`}
                   >
                     <div className="font-mono text-[11px] font-semibold text-white">
-                      {msg.role}
+                      <VisualizationText text={msg.role} />
                     </div>
                     <div className="mt-0.5 text-[10px] text-white/80">
-                      {msg.detail}
+                      <VisualizationText text={msg.detail} />
                     </div>
                   </motion.div>
                 ))}
@@ -391,7 +392,7 @@ export default function AgentLoop({ title }: { title?: string }) {
               {visibleMessages.length > 0 && (
                 <div className="mt-3 border-t border-zinc-200 pt-2 dark:border-zinc-700">
                   <span className="font-mono text-[10px] text-zinc-400">
-                    length: {visibleMessages.length}
+                    <VisualizationText text="length" />: {visibleMessages.length}
                   </span>
                 </div>
               )}
@@ -410,6 +411,7 @@ export default function AgentLoop({ title }: { title?: string }) {
         onToggleAutoPlay={toggleAutoPlay}
         stepTitle={stepInfo.title}
         stepDescription={stepInfo.desc}
+        version="s01"
       />
     </section>
   );

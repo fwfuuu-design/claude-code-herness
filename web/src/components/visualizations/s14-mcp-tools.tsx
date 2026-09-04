@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Cable, CheckCircle2, PlugZap, Search, Server, Wrench } from "lucide-react";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { cn } from "@/lib/utils";
 
@@ -107,7 +108,7 @@ function Shelf({
         >
           {icon}
         </span>
-        <span className="min-w-0 break-words">{title}</span>
+        <span className="min-w-0 break-words"><VisualizationText text={title} /></span>
       </div>
       {children}
     </div>
@@ -142,7 +143,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
                 <ToolChip key={tool} label={tool} />
               ))}
               <div className="rounded-md border border-dashed border-zinc-300 px-3 py-5 text-center text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-                limited to local skills
+                <VisualizationText text="limited to local skills" />
               </div>
             </div>
           </Shelf>
@@ -166,7 +167,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
                       : "bg-zinc-100 text-zinc-500 dark:bg-zinc-700 dark:text-zinc-300"
                   )}
                 >
-                  {connected ? "connected" : "offline"}
+                  <VisualizationText text={connected ? "connected" : "offline"} />
                 </span>
               </div>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -183,7 +184,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
                       exit={{ opacity: 0 }}
                       className="col-span-full rounded-md border border-dashed border-zinc-300 px-3 py-5 text-center text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
                     >
-                      schemas hidden until connected
+                      <VisualizationText text="schemas hidden until connected" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -213,7 +214,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
                       exit={{ opacity: 0 }}
                       className="col-span-full rounded-md border border-dashed border-zinc-300 px-3 py-4 text-center text-xs text-zinc-500 dark:border-zinc-700 dark:text-zinc-400"
                     >
-                      no MCP tools on the belt
+                      <VisualizationText text="no MCP tools on the belt" />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -232,7 +233,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
                 transition={{ duration: 1, repeat: called && !returned ? Infinity : 0 }}
               className="break-all rounded-md border border-zinc-200 bg-zinc-50 p-3 font-mono text-[11px] leading-snug text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
               >
-                {called ? "mcp__docs__search({ query })" : "waiting for a tool call"}
+                {called ? "mcp__docs__search({ query })" : <VisualizationText text="waiting for a tool call" />}
               </motion.div>
               <AnimatePresence>
                 {returned && (
@@ -242,7 +243,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
                     exit={{ opacity: 0 }}
                     className="break-words rounded-md border border-emerald-200 bg-emerald-50 p-3 text-xs leading-snug text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200"
                   >
-                    tool_result: 3 relevant docs found
+                    <VisualizationText text="tool_result: 3 relevant docs found" />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -261,6 +262,7 @@ export default function McpToolsVisualization({ title }: { title?: string }) {
           onToggleAutoPlay={vis.toggleAutoPlay}
           stepTitle={current.title}
           stepDescription={current.desc}
+          version="s14"
         />
       </div>
     </section>

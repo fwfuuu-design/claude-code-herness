@@ -3,7 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useSteppedVisualization } from "@/hooks/useSteppedVisualization";
 import { StepControls } from "@/components/visualizations/shared/step-controls";
+import { VisualizationText } from "@/components/visualizations/shared/localized-text";
+import { localizeVisualizationLabel } from "@/data/visualization-localization";
 import { useSvgPalette } from "@/hooks/useDarkMode";
+import { useLocale } from "@/lib/i18n";
 
 interface StepInfo {
   title: string;
@@ -160,6 +163,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
   } = useSteppedVisualization({ totalSteps: 7, autoPlayInterval: 2500 });
 
   const palette = useSvgPalette();
+  const locale = useLocale();
 
   const stepInfo = STEP_INFO[currentStep];
 
@@ -173,7 +177,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
       </h2>
 
       <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-700 dark:bg-zinc-900">
-        <svg viewBox="0 0 780 380" className="w-full" aria-label="Background task lanes">
+        <svg viewBox="0 0 780 380" className="w-full" aria-label={localizeVisualizationLabel(locale, "Background task lanes")}>
           <defs>
             <marker
               id="forkArrow"
@@ -236,7 +240,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
             fill={palette.labelFill}
             textAnchor="end"
           >
-            time
+            <VisualizationText text="time" />
           </text>
 
           {/* Lane backgrounds and labels */}
@@ -269,7 +273,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                 fontWeight="600"
                 fill={palette.labelFill}
               >
-                {label}
+                <VisualizationText text={label} />
               </text>
             </g>
           ))}
@@ -320,7 +324,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    {block.label}
+                    <VisualizationText text={block.label} />
                   </motion.text>
                 )}
                 {isComplete && (
@@ -334,7 +338,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    done
+                    <VisualizationText text="done" />
                   </motion.text>
                 )}
               </motion.g>
@@ -398,7 +402,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                 fontWeight="600"
                 fill="var(--color-carbon)"
               >
-                LLM API call
+                <VisualizationText text="LLM API call" />
               </text>
             </motion.g>
           )}
@@ -422,7 +426,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
             fontWeight="600"
             fill={palette.labelFill}
           >
-            Notification
+            <VisualizationText text="Notification" />
           </text>
           <text
             x={TIMELINE_LEFT - 10}
@@ -432,7 +436,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
             fontWeight="600"
             fill={palette.labelFill}
           >
-            Queue
+            <VisualizationText text="Queue" />
           </text>
 
           {/* Queue cards */}
@@ -487,7 +491,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                       fontFamily="monospace"
                       fill="var(--color-ash)"
                     >
-                      {card.label}
+                      <VisualizationText text={card.label} />
                     </text>
                   </motion.g>
                 );
@@ -530,7 +534,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
                     fontFamily="monospace"
                     fill="var(--color-ash)"
                   >
-                    {card.label}
+                    <VisualizationText text={card.label} />
                   </text>
                 </motion.g>
               );
@@ -573,7 +577,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
             >
-              queue drained -- injected into next LLM call
+              <VisualizationText text="queue drained -- injected into next LLM call" />
             </motion.text>
           )}
         </svg>
@@ -583,25 +587,25 @@ export default function BackgroundTasks({ title }: { title?: string }) {
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
-              Main thread
+              <VisualizationText text="Main thread" />
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
-              Background 1
+              <VisualizationText text="Background 1" />
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
-              Background 2
+              <VisualizationText text="Background 2" />
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ background: "var(--color-accent)" }} />
             <span className="text-[10px] text-zinc-500 dark:text-zinc-400">
-              LLM boundary
+              <VisualizationText text="LLM boundary" />
             </span>
           </div>
         </div>
@@ -617,6 +621,7 @@ export default function BackgroundTasks({ title }: { title?: string }) {
         onToggleAutoPlay={toggleAutoPlay}
         stepTitle={stepInfo.title}
         stepDescription={stepInfo.description}
+        version="s11"
       />
     </section>
   );
