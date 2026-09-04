@@ -1,13 +1,25 @@
 import type { Metadata } from "next";
-import { I18nProvider } from "@/lib/i18n";
+import localFont from "next/font/local";
+import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/header";
+import { I18nProvider } from "@/lib/i18n";
 import en from "@/i18n/messages/en.json";
 import zh from "@/i18n/messages/zh.json";
-import ja from "@/i18n/messages/ja.json";
 import "../globals.css";
 
-const locales = ["en", "zh", "ja"];
-const metaMessages: Record<string, typeof en> = { en, zh, ja };
+const locales = ["en", "zh"] as const;
+type Locale = (typeof locales)[number];
+
+const metaMessages: Record<Locale, typeof en> = { en, zh };
+
+const spaceGrotesk = localFont({
+  src: "../../../public/fonts/SpaceGrotesk-Variable.woff2",
+  display: "swap",
+  style: "normal",
+  weight: "300 700",
+  variable: "--font-space-grotesk",
+  fallback: ["Arial", "sans-serif"],
+});
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -19,14 +31,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const messages = metaMessages[locale] || metaMessages.en;
+  const messages = metaMessages[locale as Locale] ?? metaMessages.en;
+
   return {
-    title: messages.meta?.title || "Learn Claude Code",
-    description: messages.meta?.description || "Build an AI coding agent from scratch, one concept at a time",
+    title: messages.meta.title,
+    description: messages.meta.description,
   };
 }
 
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
   params,
 }: {
@@ -34,23 +47,22 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  if (!locales.includes(locale as Locale)) notFound();
+
+  const messages = metaMessages[locale as Locale];
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            var theme = localStorage.getItem('theme');
-            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-              document.documentElement.classList.add('dark');
-            }
-          })();
-        `}} />
-      </head>
-      <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+    <html
+      lang={locale === "zh" ? "zh-CN" : "en"}
+      className={`dark ${spaceGrotesk.variable}`}
+    >
+      <body className="antialiased">
+        <a className="skip-link" href="#main-content">
+          {messages.nav.skip_to_content}
+        </a>
         <I18nProvider locale={locale}>
           <Header />
-          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+          <main id="main-content" className="site-main" tabIndex={-1}>
             {children}
           </main>
         </I18nProvider>

@@ -1,6 +1,6 @@
 # s01: Agent Loop — 一个循环就够了
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 `s01` → [s02](../s02_tool_use/) → s03 → s04 → ... → s16 → s17
 > *"One loop & Bash is all you need"* — 一个工具 + 一个循环 = 一个 Agent。

@@ -1,6 +1,6 @@
 # s01: The Agent Loop — One Loop Is All You Need
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 `s01` → [s02](../s02_tool_use/) → s03 → s04 → ... → s16 → s17
 > *"One loop & Bash is all you need"* — One tool + one loop = one Agent.

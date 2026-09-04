@@ -1,6 +1,6 @@
 # s16: Workflow Runtime — The Model Decides Each Step; a Script Decides the Orchestration
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 s01 → ... → s14 → [s15](../s15_integrated_harness/) → `s16` → [s17](../s17_goal_loop/)
 

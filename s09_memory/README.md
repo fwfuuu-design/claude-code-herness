@@ -1,6 +1,6 @@
 # s09: Memory — Keep Useful Knowledge Across Sessions
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 s01 → ... → s07 → s08 → `s09` → [s10](../s10_task_system/) → s11 → ... → s16 → s17
 > *"Keep information that later tasks will need."* File storage + an index + relevance selection + on-demand recall.

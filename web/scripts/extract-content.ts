@@ -11,13 +11,11 @@ import { VERSION_META, VERSION_ORDER, LEARNING_PATH } from "../src/lib/constants
 
 const WEB_DIR = path.resolve(__dirname, "..");
 const REPO_ROOT = path.resolve(WEB_DIR, "..");
-const LEGACY_AGENTS_DIR = path.join(REPO_ROOT, "agents");
-const LEGACY_DOCS_DIR = path.join(REPO_ROOT, "docs");
 const OUT_DIR = path.join(WEB_DIR, "src", "data", "generated");
 const PUBLIC_DIR = path.join(WEB_DIR, "public");
 const COURSE_ASSETS_DIR = path.join(PUBLIC_DIR, "course-assets");
 
-type Locale = "en" | "zh" | "ja";
+type Locale = "en" | "zh";
 
 interface ChapterSource {
   id: string;
@@ -31,30 +29,57 @@ function dirToVersionId(dirName: string): string | null {
   return match ? match[1] : null;
 }
 
-function filenameToVersionId(filename: string): string | null {
-  const base = path.basename(filename, ".py");
-  if (base === "s_full" || base === "__init__") return null;
-
-  const match = base.match(/^(s\d+[a-c]?)_/);
-  return match ? match[1] : null;
-}
-
 function listRootChapters(): ChapterSource[] {
-  return fs
+  const candidates = fs
     .readdirSync(REPO_ROOT, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
-    .filter((name) => /^s\d{2}_/.test(name))
-    .sort()
-    .map((dirName) => {
-      const id = dirToVersionId(dirName);
-      if (!id) return null;
-      const dirPath = path.join(REPO_ROOT, dirName);
-      const codePath = path.join(dirPath, "code.py");
-      if (!fs.existsSync(codePath)) return null;
-      return { id, dirName, dirPath, codePath };
-    })
-    .filter((chapter): chapter is ChapterSource => chapter !== null);
+    .filter((name) => /^s(?:0[1-9]|1[0-7])_/.test(name));
+
+  const directoriesById = new Map<string, string[]>();
+  for (const dirName of candidates) {
+    const id = dirToVersionId(dirName);
+    if (!id) continue;
+    directoriesById.set(id, [...(directoriesById.get(id) ?? []), dirName]);
+  }
+
+  const errors: string[] = [];
+  const chapters: ChapterSource[] = [];
+
+  for (const id of VERSION_ORDER) {
+    const directories = directoriesById.get(id) ?? [];
+    if (directories.length === 0) {
+      errors.push(`${id}: chapter directory is missing`);
+      continue;
+    }
+    if (directories.length > 1) {
+      errors.push(`${id}: multiple chapter directories found (${directories.join(", ")})`);
+      continue;
+    }
+
+    const dirName = directories[0];
+    const dirPath = path.join(REPO_ROOT, dirName);
+    const codePath = path.join(dirPath, "code.py");
+    const requiredFiles = ["code.py", "README.md", "README.zh.md"];
+    const missingFiles = requiredFiles.filter(
+      (filename) => !fs.existsSync(path.join(dirPath, filename))
+    );
+
+    if (missingFiles.length > 0) {
+      errors.push(`${id}: missing ${missingFiles.join(", ")} in ${dirName}`);
+      continue;
+    }
+
+    chapters.push({ id, dirName, dirPath, codePath });
+  }
+
+  if (errors.length > 0 || chapters.length !== VERSION_ORDER.length) {
+    throw new Error(
+      `Course extraction requires the complete s01-s17 root track:\n- ${errors.join("\n- ")}`
+    );
+  }
+
+  return chapters;
 }
 
 function extractClasses(
@@ -184,17 +209,6 @@ function countLoc(lines: string[]): number {
   }).length;
 }
 
-function detectLocale(relPath: string): Locale {
-  if (relPath.startsWith("zh/") || relPath.startsWith("zh\\")) return "zh";
-  if (relPath.startsWith("ja/") || relPath.startsWith("ja\\")) return "ja";
-  return "en";
-}
-
-function extractDocVersion(filename: string): string | null {
-  const match = filename.match(/^(s\d+[a-c]?)-/);
-  return match ? match[1] : null;
-}
-
 function readText(filePath: string): string {
   return fs.readFileSync(filePath, "utf-8").replace(/\r\n/g, "\n");
 }
@@ -241,7 +255,7 @@ function rewriteChapterMarkdown(
   let next = content;
 
   next = next.replace(
-    /^\[English\]\(README\.md\)\s*.\s*\[中文\]\(README\.zh\.md\)\s*.\s*\[日本語\]\(README\.ja\.md\)\n\n?/m,
+    /^\[English\]\(README\.md\)\s*.\s*\[中文\]\(README\.zh\.md\)\n\n?/m,
     ""
   );
 
@@ -342,7 +356,7 @@ function buildLegacyVersions(): AgentVersion[] {
 
 function buildRootDocs(chapters: ChapterSource[]): DocContent[] {
   const docs: DocContent[] = [];
-  const locales: Locale[] = ["en", "zh", "ja"];
+  const locales: Locale[] = ["en", "zh"];
 
   for (const chapter of chapters) {
     for (const locale of locales) {
@@ -368,7 +382,7 @@ function buildLegacyDocs(): DocContent[] {
   const docs: DocContent[] = [];
   if (!fs.existsSync(LEGACY_DOCS_DIR)) return docs;
 
-  const localeDirs: Locale[] = ["en", "zh", "ja"];
+  const localeDirs: Locale[] = ["en", "zh"];
   for (const locale of localeDirs) {
     const localeDir = path.join(LEGACY_DOCS_DIR, locale);
     if (!fs.existsSync(localeDir)) continue;

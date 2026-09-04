@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { KeyboardEvent, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface TabsProps {
@@ -12,26 +12,76 @@ interface TabsProps {
 
 export function Tabs({ tabs, defaultTab, children, className }: TabsProps) {
   const [active, setActive] = useState(defaultTab || tabs[0]?.id || "");
+  const instanceId = useId();
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  function selectAt(index: number) {
+    const tab = tabs[index];
+    if (!tab) return;
+    setActive(tab.id);
+    tabRefs.current[index]?.focus();
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    let nextIndex: number | null = null;
+
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+    if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = tabs.length - 1;
+
+    if (nextIndex === null) return;
+    event.preventDefault();
+    selectAt(nextIndex);
+  }
+
+  const panelId = `${instanceId}-panel`;
 
   return (
     <div className={className}>
-      <div className="flex border-b border-zinc-200 dark:border-zinc-700">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActive(tab.id)}
-            className={cn(
-              "px-4 py-2 text-sm font-medium transition-colors",
-              active === tab.id
-                ? "border-b-2 border-zinc-900 text-zinc-900 dark:border-white dark:text-white"
-                : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
+      <div
+        className="flex overflow-x-auto border-b border-[var(--color-border)]"
+        role="tablist"
+      >
+        {tabs.map((tab, index) => {
+          const selected = active === tab.id;
+          const tabId = `${instanceId}-${tab.id}`;
+
+          return (
+            <button
+              key={tab.id}
+              ref={(node) => {
+                tabRefs.current[index] = node;
+              }}
+              id={tabId}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              aria-controls={panelId}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => setActive(tab.id)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+              className={cn(
+                "relative min-h-11 shrink-0 px-4 font-mono text-xs uppercase tracking-[0.06em] transition-colors",
+                selected
+                  ? "text-[var(--color-chalk)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--color-chalk)]"
+                  : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
+              )}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
       </div>
-      <div className="mt-4">{children(active)}</div>
+      <div
+        id={panelId}
+        role="tabpanel"
+        aria-labelledby={`${instanceId}-${active}`}
+        tabIndex={0}
+        className="mt-5"
+      >
+        {children(active)}
+      </div>
     </div>
   );
 }

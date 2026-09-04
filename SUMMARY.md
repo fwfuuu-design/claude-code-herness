@@ -61,7 +61,7 @@ Harness = Tools + Knowledge + Observation + Action Interfaces + Permissions
 ```
 learn-claude-code/
   s01_agent_loop/ ... s17_goal_loop/   # 每章节一个文件夹
-    README.md / .zh.md / .ja.md        # 三语README
+    README.md / README.zh.md           # 英中双语 README
     code.py                            # 可运行代码
     images/                            # SVG 图示
   agents/                              # 旧版12课可运行代码
@@ -81,7 +81,7 @@ learn-claude-code/
 
 仓库包含两条教学轨道：
 
-- **当前轨道：根目录 `s01-s17`**（22 个章节，规范版本，含三语 README + 可运行 code.py）
+- **当前轨道：根目录 `s01-s17`**（17 个章节，规范版本，含英中双语 README + 可运行 code.py）
 - **旧版过渡轨道：`docs/` 和 `agents/`**（保留旧的 12 课版本供老读者和旧链接使用）
 
 新旧章节编号不完全对应，避免混用两轨编号。旧版 12 课 → 当前 17 课的映射：
@@ -139,7 +139,6 @@ learn-claude-code/
   s01_agent_loop/          # 每章一个文件夹
     README.md              #   英文默认 README
     README.zh.md           #   中文翻译
-    README.ja.md           #   日文翻译
     code.py                #   独立可运行代码
     images/                #   SVG 图示
   s02_tool_use/ ... s17_goal_loop/  # 后续章节（s17 为终点章）

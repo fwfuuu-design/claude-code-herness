@@ -1,6 +1,6 @@
 # s12: Cron Scheduler — 按时间启动任务
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 s01 → ... → s10 → s11 → `s12` → [s13](../s13_agent_teams/) → ... → s17
 

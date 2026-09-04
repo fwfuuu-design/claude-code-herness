@@ -2,163 +2,216 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations, useLocale } from "@/lib/i18n";
-import { Github, Menu, X, Sun, Moon } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Github, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useLocale, useTranslations } from "@/lib/i18n";
 
 const NAV_ITEMS = [
-  { key: "timeline", href: "/timeline" },
+  { key: "course", href: "/course" },
+  { key: "topics", href: "/topics" },
   { key: "compare", href: "/compare" },
-  { key: "layers", href: "/layers" },
 ] as const;
 
 const LOCALES = [
-  { code: "en", label: "EN" },
-  { code: "zh", label: "中文" },
-  { code: "ja", label: "日本語" },
-];
+  { code: "en", shortLabel: "EN", labelKey: "english" },
+  { code: "zh", shortLabel: "中文", labelKey: "chinese" },
+] as const;
 
 export function Header() {
   const t = useTranslations("nav");
   const pathname = usePathname();
   const locale = useLocale();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [dark, setDark] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
-    setDark(document.documentElement.classList.contains("dark"));
-  }, []);
+    setMobileOpen(false);
+  }, [pathname]);
 
-  function toggleDark() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("theme", next ? "dark" : "light");
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    mobileMenuRef.current
+      ?.querySelector<HTMLElement>("a[href], button:not([disabled])")
+      ?.focus();
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      setMobileOpen(false);
+      menuButtonRef.current?.focus();
+    }
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [mobileOpen]);
+
+  function switchLocale(nextLocale: string) {
+    if (nextLocale === locale) return;
+
+    const localizedPath = pathname.replace(
+      /^\/(en|zh)(?=\/|$)/,
+      `/${nextLocale}`
+    );
+    const suffix = `${window.location.search}${window.location.hash}`;
+    window.location.assign(`${localizedPath}${suffix}`);
   }
 
-  function switchLocale(newLocale: string) {
-    const newPath = pathname.replace(`/${locale}`, `/${newLocale}`);
-    window.location.href = newPath;
+  function isActive(item: (typeof NAV_ITEMS)[number]) {
+    const target = `/${locale}${item.href}`;
+    if (pathname === target || pathname === `${target}/`) return true;
+
+    return (
+      item.key === "course" &&
+      new RegExp(`^/${locale}/s\\d{2}(?:/|$)`).test(pathname)
+    );
   }
+
+  const localeControls = (mobile = false) => (
+    <div
+      className={cn(
+        "flex items-center border border-[var(--color-border)]",
+        mobile ? "w-full" : "rounded-[var(--radius-label)]"
+      )}
+      role="group"
+      aria-label={t("language")}
+    >
+      {LOCALES.map((item) => {
+        const selected = locale === item.code;
+        return (
+          <button
+            key={item.code}
+            type="button"
+            onClick={() => switchLocale(item.code)}
+            aria-label={t(item.labelKey)}
+            aria-pressed={selected}
+            className={cn(
+              "min-h-11 px-3 font-mono text-[11px] transition-colors",
+              mobile && "flex-1",
+              selected
+                ? "bg-[var(--color-chalk)] text-[var(--color-carbon)]"
+                : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
+            )}
+          >
+            {item.shortLabel}
+          </button>
+        );
+      })}
+    </div>
+  );
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-sm">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href={`/${locale}`} className="text-lg font-bold">
-          Learn Claude Code
+    <header className="fixed inset-x-0 top-0 z-50 h-[var(--header-height)] border-b border-[var(--color-border)] bg-[color:rgb(8_8_8_/_0.9)] backdrop-blur-md">
+      <div className="mx-auto flex h-full max-w-[var(--page-max)] items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+        <Link
+          href={`/${locale}/`}
+          className="font-display text-xl font-medium tracking-[-0.04em] text-[var(--color-chalk)] transition-opacity hover:opacity-70"
+          aria-label={`Harness — ${t("home")}`}
+        >
+          Harness
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-6 md:flex">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.key}
-              href={`/${locale}${item.href}`}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-zinc-900 dark:hover:text-white",
-                pathname.includes(item.href)
-                  ? "text-zinc-900 dark:text-white"
-                  : "text-zinc-500 dark:text-zinc-400"
-              )}
-            >
-              {t(item.key)}
-            </Link>
-          ))}
-
-          {/* Locale switcher */}
-          <div className="flex items-center gap-1 rounded-lg border border-[var(--color-border)] p-0.5">
-            {LOCALES.map((l) => (
-              <button
-                key={l.code}
-                onClick={() => switchLocale(l.code)}
+        <nav className="hidden h-full items-center gap-8 md:flex" aria-label={t("home")}>
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item);
+            return (
+              <Link
+                key={item.key}
+                href={`/${locale}${item.href}`}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-2 py-1 text-xs font-medium transition-colors",
-                  locale === l.code
-                    ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                    : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400"
+                  "relative flex h-full items-center font-mono text-xs uppercase tracking-[0.08em] transition-colors",
+                  active
+                    ? "text-[var(--color-chalk)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--color-chalk)]"
+                    : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
                 )}
               >
-                {l.label}
-              </button>
-            ))}
-          </div>
+                {t(item.key)}
+              </Link>
+            );
+          })}
+        </nav>
 
-          <button
-            onClick={toggleDark}
-            className="rounded-md p-1.5 text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
-          >
-            {mounted ? (dark ? <Sun size={16} /> : <Moon size={16} />) : <span className="w-4 h-4 inline-block" />}
-          </button>
-
+        <div className="hidden items-center gap-3 md:flex">
+          {localeControls()}
           <a
             href="https://github.com/shareAI-lab/learn-claude-code"
             target="_blank"
-            rel="noopener"
-            className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
+            rel="noopener noreferrer"
+            className="flex min-h-11 min-w-11 items-center justify-center text-[var(--color-smoke)] transition-colors hover:text-[var(--color-chalk)]"
+            aria-label={t("github")}
           >
-            <Github size={18} />
+            <Github size={17} aria-hidden="true" />
           </a>
-        </nav>
+          <Link href={`/${locale}/s01`} className="button-primary">
+            {t("start_s01")}
+            <span aria-hidden="true">→</span>
+          </Link>
+        </div>
 
-        {/* Mobile hamburger */}
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="flex min-h-[44px] min-w-[44px] items-center justify-center md:hidden"
+          ref={menuButtonRef}
+          type="button"
+          onClick={() => setMobileOpen((open) => !open)}
+          className="flex min-h-11 min-w-11 items-center justify-center text-[var(--color-chalk)] md:hidden"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-navigation"
+          aria-label={mobileOpen ? t("close_menu") : t("open_menu")}
         >
-          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          {mobileOpen ? (
+            <X size={20} aria-hidden="true" />
+          ) : (
+            <Menu size={20} aria-hidden="true" />
+          )}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="border-t border-[var(--color-border)] bg-[var(--color-bg)] p-4 md:hidden">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.key}
-              href={`/${locale}${item.href}`}
-              className="flex min-h-[44px] items-center text-sm"
-              onClick={() => setMobileOpen(false)}
-            >
-              {t(item.key)}
-            </Link>
-          ))}
-          <div className="mt-3 flex items-center justify-between border-t border-[var(--color-border)] pt-3">
-            <div className="flex gap-2">
-              {LOCALES.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => switchLocale(l.code)}
+        <div
+          ref={mobileMenuRef}
+          id="mobile-navigation"
+          className="border-b border-[var(--color-border)] bg-[var(--color-carbon)] px-4 pb-6 pt-3 md:hidden"
+        >
+          <nav className="mx-auto max-w-[var(--page-max)]" aria-label={t("home")}>
+            {NAV_ITEMS.map((item) => {
+              const active = isActive(item);
+              return (
+                <Link
+                  key={item.key}
+                  href={`/${locale}${item.href}`}
+                  aria-current={active ? "page" : undefined}
                   className={cn(
-                    "min-h-[44px] min-w-[44px] rounded-md px-3 text-xs font-medium",
-                    locale === l.code
-                      ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                      : "border border-[var(--color-border)]"
+                    "flex min-h-12 items-center justify-between border-b border-[var(--color-border)] font-mono text-xs uppercase tracking-[0.08em]",
+                    active
+                      ? "text-[var(--color-chalk)]"
+                      : "text-[var(--color-smoke)]"
                   )}
                 >
-                  {l.label}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={toggleDark}
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
-              >
-                {mounted ? (dark ? <Sun size={18} /> : <Moon size={18} />) : <span className="w-[18px] h-[18px] inline-block" />}
-              </button>
+                  {t(item.key)}
+                  <span aria-hidden="true">{active ? "●" : "→"}</span>
+                </Link>
+              );
+            })}
+
+            <div className="mt-5 grid gap-3">
+              {localeControls(true)}
+              <Link href={`/${locale}/s01`} className="button-primary w-full">
+                {t("start_s01")}
+                <span aria-hidden="true">→</span>
+              </Link>
               <a
                 href="https://github.com/shareAI-lab/learn-claude-code"
                 target="_blank"
-                rel="noopener"
-                className="flex min-h-[44px] min-w-[44px] items-center justify-center text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
+                rel="noopener noreferrer"
+                className="button-secondary w-full"
               >
-                <Github size={18} />
+                <Github size={16} aria-hidden="true" />
+                GitHub
+                <span className="sr-only">— {t("github")}</span>
               </a>
             </div>
-          </div>
+          </nav>
         </div>
       )}
     </header>

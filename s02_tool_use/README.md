@@ -1,6 +1,6 @@
 # s02: Tool Use — Add a Tool, Add Just One Line
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 s01 → `s02` → [s03](../s03_permission/) → s04 → ... → s16 → s17
 > *"Add a tool, add just one handler"* — The loop stays the same. Register the new tool in the dispatch map and you're done.

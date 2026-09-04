@@ -200,7 +200,7 @@ def agent_loop(messages):
 本仓库现在同时保留两条教程线：
 
 - **新版主线：根目录 `s01-s17`**
-  根目录下的 `s01_*` 到 `s17_*` 是新的主版本，也是当前推荐阅读路径。每章包含默认英文 README、中文/日文译本、可运行的 `code.py`，以及必要的图示。
+  根目录下的 `s01_*` 到 `s17_*` 是新的主版本，也是当前推荐阅读路径。每章包含默认英文 README、中文译本、可运行的 `code.py`，以及必要的图示。
 - **旧版过渡：`docs/`、`agents/`**
   这些仍保留旧 12 章体系，暂时用于已有读者和旧链接过渡。
 
@@ -348,7 +348,6 @@ learn-claude-code/
   s01_agent_loop/          # 每章一个文件夹
     README.md              #   默认英文文档（完整叙事）
     README.zh.md           #   中文译本
-    README.ja.md           #   日文译本
     code.py                #   独立可运行代码
     images/                #   SVG 流程图
   s02_tool_use/

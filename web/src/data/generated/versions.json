@@ -3173,7 +3173,7 @@
         {
           "name": "main",
           "signature": "async def main(argv: list[str])",
-          "startLine": 849
+          "startLine": 847
         }
       ],
       "layer": "planning",
@@ -3736,7 +3736,7 @@
         "main"
       ],
       "newTools": [],
-      "locDelta": 68
+      "locDelta": 66
     }
   ]
 }

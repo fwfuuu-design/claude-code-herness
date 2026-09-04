@@ -2,63 +2,70 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LAYERS, VERSION_META } from "@/lib/constants";
-import { useTranslations } from "@/lib/i18n";
+import { LAYERS } from "@/lib/constants";
+import { useLocale, useTranslations } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-
-const LAYER_DOT_BG: Record<string, string> = {
-  tools: "bg-blue-500",
-  planning: "bg-emerald-500",
-  memory: "bg-purple-500",
-  concurrency: "bg-amber-500",
-  collaboration: "bg-red-500",
-};
 
 export function Sidebar() {
   const pathname = usePathname();
-  const locale = pathname.split("/")[1] || "en";
-  const t = useTranslations("sessions");
+  const locale = useLocale();
+  const tSession = useTranslations("sessions");
   const tLayer = useTranslations("layer_labels");
+  const tNav = useTranslations("nav");
 
   return (
-    <nav className="hidden w-56 shrink-0 md:block">
-      <div className="sticky top-[calc(3.5rem+2rem)] space-y-5">
-        {LAYERS.map((layer) => (
-          <div key={layer.id}>
-            <div className="flex items-center gap-1.5 pb-1.5">
-              <span className={cn("h-2 w-2 rounded-full", LAYER_DOT_BG[layer.id])} />
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                {tLayer(layer.id)}
-              </span>
+    <nav
+      className="hidden w-60 shrink-0 border-r border-[var(--color-border)] pr-5 md:block"
+      aria-label={tNav("course")}
+    >
+      <div className="sticky top-[calc(var(--header-height)+2rem)] space-y-7">
+        {LAYERS.map((layer, layerIndex) => (
+          <section key={layer.id} aria-labelledby={`sidebar-${layer.id}`}>
+            <div className="flex items-center gap-2 pb-2">
+              <span
+                className="h-2 w-2 border border-[var(--color-compass-gold)]"
+                aria-hidden="true"
+              />
+              <h2
+                id={`sidebar-${layer.id}`}
+                className="font-mono text-[10px] font-normal uppercase tracking-[0.1em] text-[var(--color-smoke)]"
+              >
+                {String(layerIndex + 1).padStart(2, "0")} / {tLayer(layer.id)}
+              </h2>
             </div>
             <ul className="space-y-0.5">
-              {layer.versions.map((vId) => {
-                const meta = VERSION_META[vId];
-                const href = `/${locale}/${vId}`;
-                const isActive =
+              {layer.versions.map((versionId) => {
+                const href = `/${locale}/${versionId}`;
+                const active =
                   pathname === href ||
                   pathname === `${href}/` ||
                   pathname.startsWith(`${href}/diff`);
 
                 return (
-                  <li key={vId}>
+                  <li key={versionId}>
                     <Link
                       href={href}
+                      aria-current={active ? "page" : undefined}
                       className={cn(
-                        "block rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                        isActive
-                          ? "bg-zinc-100 font-medium text-zinc-900 dark:bg-zinc-800 dark:text-white"
-                          : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
+                        "group grid min-h-10 grid-cols-[2.5rem_1fr_auto] items-center border-l px-2 text-sm transition-colors",
+                        active
+                          ? "border-[var(--color-chalk)] bg-[var(--color-surface)] text-[var(--color-chalk)]"
+                          : "border-transparent text-[var(--color-smoke)] hover:border-[var(--color-iron)] hover:text-[var(--color-chalk)]"
                       )}
                     >
-                      <span className="font-mono text-xs">{vId}</span>
-                      <span className="ml-1.5">{t(vId) || meta?.title}</span>
+                      <span className="font-mono text-[11px] uppercase">
+                        {versionId}
+                      </span>
+                      <span className="truncate">{tSession(versionId)}</span>
+                      {active && (
+                        <span className="status-dot" aria-hidden="true" />
+                      )}
                     </Link>
                   </li>
                 );
               })}
             </ul>
-          </div>
+          </section>
         ))}
       </div>
     </nav>

@@ -1,6 +1,6 @@
 # s17: Goal Loop: The Model Proposes a Stop; an Independent Evaluator Decides Whether to Continue
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 s01 → ... → s15 → [s16](../s16_workflow_runtime/) → `s17`
 

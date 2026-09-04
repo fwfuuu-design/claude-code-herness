@@ -13,13 +13,9 @@ export interface ChapterImage {
 export interface AgentVersion {
   id: string;
   filename: string;
-  title: string;
-  subtitle: string;
   loc: number;
   tools: string[];
   newTools: string[];
-  coreAddition: string;
-  keyInsight: string;
   classes: { name: string; startLine: number; endLine: number }[];
   functions: { name: string; signature: string; startLine: number }[];
   layer: AgentLayer;
@@ -38,7 +34,7 @@ export interface VersionDiff {
 
 export interface DocContent {
   version: string;
-  locale: "en" | "zh" | "ja";
+  locale: "en" | "zh";
   title: string;
   content: string; // raw markdown
 }

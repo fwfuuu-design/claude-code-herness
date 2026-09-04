@@ -90,7 +90,6 @@ web/src/components/layout/sidebar.tsx
 web/src/components/ui/*
 web/src/lib/constants.ts
 web/src/i18n/messages/{en,zh}.json
-web/src/i18n/messages/ja.json（删除）
 web/scripts/extract-content.ts
 web/src/app/[locale]/(learn)/timeline/
 web/src/app/[locale]/(learn)/layers/
@@ -125,7 +124,7 @@ web/public/fonts/
    - 将 `/[locale]/timeline` 调整为 `/[locale]/course`；
    - 将 `/[locale]/layers` 调整为 `/[locale]/topics`；
    - 更新所有站内链接和英中双语导航文案；
-   - 从 locale 配置、静态参数、语言切换器和 i18n 消息中移除日语支持；
+   - 确认 locale 配置、静态参数、语言切换器和 i18n 消息只保留英文与简体中文；
    - 新界面不保留 Timeline、Layers 或旧版 12 章的可见兼容入口。
 
 5. **收紧内容提取边界**
@@ -133,7 +132,7 @@ web/public/fonts/
    - 移除运行时回退到 `agents/` 和旧版 12 章文档的逻辑；
    - 缺少章节、`code.py` 或必要 README 时在开发阶段明确失败；
    - 保留已有 README 链接改写、图片复制、源码统计和 Diff 生成能力；
-   - 内容提取只读取 `README.md` 和 `README.zh.md`，不读取 `README.ja.md`；
+   - 内容提取只读取 `README.md` 和 `README.zh.md`；
    - 结构数据与展示文案分离：章节顺序、依赖和层级保留在常量中，标题、说明和界面文字进入英中双语消息文件。
 
 ### 阶段验收标准

@@ -1,6 +1,6 @@
 # s03: Permission — 执行前做权限判断
 
-[English](README.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[English](README.md) · [中文](README.zh.md)
 
 s01 → s02 → `s03` → [s04](../s04_hooks/) → s05 → ... → s16 → s17
 > *"工具执行前先做权限判断"* — 权限管线决定哪些操作需要审批。

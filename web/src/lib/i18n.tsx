@@ -2,11 +2,10 @@
 import { createContext, useContext, ReactNode } from "react";
 import en from "@/i18n/messages/en.json";
 import zh from "@/i18n/messages/zh.json";
-import ja from "@/i18n/messages/ja.json";
 
 type Messages = typeof en;
 
-const messagesMap: Record<string, Messages> = { en, zh, ja };
+const messagesMap: Record<string, Messages> = { en, zh };
 
 const I18nContext = createContext<{ locale: string; messages: Messages }>({
   locale: "en",
