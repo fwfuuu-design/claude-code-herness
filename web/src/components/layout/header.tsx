@@ -6,16 +6,14 @@ import { Github, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useLocale, useTranslations } from "@/lib/i18n";
+import { LanguageSwitch } from "./language-switch";
+
+const REPOSITORY_URL = "https://github.com/fwfuuu-design/claude-code-herness";
 
 const NAV_ITEMS = [
   { key: "course", href: "/course" },
   { key: "topics", href: "/topics" },
   { key: "compare", href: "/compare" },
-] as const;
-
-const LOCALES = [
-  { code: "en", shortLabel: "EN", labelKey: "english" },
-  { code: "zh", shortLabel: "中文", labelKey: "chinese" },
 ] as const;
 
 export function Header() {
@@ -47,17 +45,6 @@ export function Header() {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [mobileOpen]);
 
-  function switchLocale(nextLocale: string) {
-    if (nextLocale === locale) return;
-
-    const localizedPath = pathname.replace(
-      /^\/(en|zh)(?=\/|$)/,
-      `/${nextLocale}`
-    );
-    const suffix = `${window.location.search}${window.location.hash}`;
-    window.location.assign(`${localizedPath}${suffix}`);
-  }
-
   function isActive(item: (typeof NAV_ITEMS)[number]) {
     const target = `/${locale}${item.href}`;
     if (pathname === target || pathname === `${target}/`) return true;
@@ -67,39 +54,6 @@ export function Header() {
       new RegExp(`^/${locale}/s\\d{2}(?:/|$)`).test(pathname)
     );
   }
-
-  const localeControls = (mobile = false) => (
-    <div
-      className={cn(
-        "flex items-center border border-[var(--color-border)]",
-        mobile ? "w-full" : "rounded-[var(--radius-label)]"
-      )}
-      role="group"
-      aria-label={t("language")}
-    >
-      {LOCALES.map((item) => {
-        const selected = locale === item.code;
-        return (
-          <button
-            key={item.code}
-            type="button"
-            onClick={() => switchLocale(item.code)}
-            aria-label={t(item.labelKey)}
-            aria-pressed={selected}
-            className={cn(
-              "min-h-11 px-3 font-mono text-[11px] transition-colors",
-              mobile && "flex-1",
-              selected
-                ? "bg-[var(--color-chalk)] text-[var(--color-carbon)]"
-                : "text-[var(--color-smoke)] hover:text-[var(--color-chalk)]"
-            )}
-          >
-            {item.shortLabel}
-          </button>
-        );
-      })}
-    </div>
-  );
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-[var(--header-height)] border-b border-[var(--color-border)] bg-[color:rgb(8_8_8_/_0.9)] backdrop-blur-md">
@@ -134,9 +88,9 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          {localeControls()}
+          <LanguageSwitch />
           <a
-            href="https://github.com/shareAI-lab/learn-claude-code"
+            href={REPOSITORY_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex min-h-11 min-w-11 items-center justify-center text-[var(--color-smoke)] transition-colors hover:text-[var(--color-chalk)]"
@@ -195,13 +149,13 @@ export function Header() {
             })}
 
             <div className="mt-5 grid gap-3">
-              {localeControls(true)}
+              <LanguageSwitch />
               <Link href={`/${locale}/s01`} className="button-primary w-full">
                 {t("start_s01")}
                 <span aria-hidden="true">→</span>
               </Link>
               <a
-                href="https://github.com/shareAI-lab/learn-claude-code"
+                href={REPOSITORY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="button-secondary w-full"

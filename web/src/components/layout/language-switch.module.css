@@ -1,0 +1,78 @@
+/* The visible pill is 104 × 32px; each transparent hit area stays 52 × 44px. */
+.switch {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 104px;
+  height: 44px;
+  flex-shrink: 0;
+  justify-self: start;
+}
+
+.track {
+  position: absolute;
+  inset: 6px 0;
+  border: 1px solid var(--color-graphite);
+  border-radius: 9999px;
+  background: var(--color-carbon);
+  pointer-events: none;
+}
+
+.thumb {
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border: 1px solid var(--color-iron);
+  border-radius: 9999px;
+  background: var(--color-graphite);
+  transform: translateX(0);
+  transition: transform 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  pointer-events: none;
+}
+
+.switch[data-locale="zh"] .thumb {
+  transform: translateX(100%);
+}
+
+.option {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--color-smoke);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  transition: color 160ms ease;
+}
+
+.option[aria-pressed="true"] {
+  color: var(--color-chalk);
+}
+
+@media (hover: hover) {
+  .option:hover {
+    color: var(--color-chalk);
+  }
+}
+
+.option:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb, .option {
+    transition: none;
+  }
+}
