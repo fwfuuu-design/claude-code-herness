@@ -19,6 +19,17 @@
     "primary_navigation": "主导航"
   },
   "home": {
+    "hero_title": "Harness",
+    "hero_subtitle_initial": "构建 Harness，让模型真正行动。",
+    "core_pattern": "核心模式",
+    "core_pattern_desc": "所有 AI 编程 Agent 共享同一个循环：调用模型、执行工具、回传结果。Harness 在循环周围加入策略、权限、记忆、协作与生命周期控制。",
+    "message_flow": "消息增长",
+    "message_flow_desc": "观察 Agent 循环执行时 messages 数组如何增长",
+    "learning_path_initial": "学习路径",
+    "learning_path_desc_initial": "17 章渐进课程，从简单循环走向确定性编排与目标闭环",
+    "layers_title": "机制主题",
+    "layers_desc": "五类关注点共同组成完整的 Agent Harness",
+    "versions_in_layer": "章",
     "hero_status": "17 章 · 开放课程",
     "hero_title_line_1": "构建 Harness。",
     "hero_title_line_2": "让模型真正行动。",

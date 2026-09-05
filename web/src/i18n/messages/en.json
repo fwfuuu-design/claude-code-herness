@@ -19,6 +19,17 @@
     "primary_navigation": "Primary navigation"
   },
   "home": {
+    "hero_title": "Harness",
+    "hero_subtitle_initial": "Build the Harness. Let the Model Drive.",
+    "core_pattern": "The Core Pattern",
+    "core_pattern_desc": "Every AI coding agent shares the same loop: call the model, execute tools, feed results back. The Harness adds policy, permissions, memory, coordination, and lifecycle control around it.",
+    "message_flow": "Message Growth",
+    "message_flow_desc": "Watch the messages array grow as the agent loop executes",
+    "learning_path_initial": "Learning Path",
+    "learning_path_desc_initial": "17 progressive lessons, from a simple loop to deterministic orchestration and goal closure",
+    "layers_title": "Mechanism Topics",
+    "layers_desc": "Five concerns that compose into a complete Agent Harness",
+    "versions_in_layer": "lessons",
     "hero_status": "17 lessons · open course",
     "hero_title_line_1": "Build the harness.",
     "hero_title_line_2": "Let the model drive.",
