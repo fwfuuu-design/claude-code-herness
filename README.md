@@ -1,5 +1,7 @@
 # Learn Claude Code -- 真正的 Agent Harness 工程
 
+🌐 **在线课程**：[简体中文](https://claude-code-herness.vercel.app/zh/) · [English](https://claude-code-herness.vercel.app/en/)
+
 ## Agent 产品 = 模型 + Harness
 
 在讨论代码之前，先把一件事说清楚。
