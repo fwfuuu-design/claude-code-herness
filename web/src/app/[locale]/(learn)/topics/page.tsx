@@ -30,9 +30,7 @@ export default function TopicsPage() {
               <p className="max-w-2xl text-sm leading-relaxed text-[var(--color-smoke)]">{t(layer.id)}</p>
             </div>
 
-            <div className="relative mt-9 pl-6 before:absolute before:bottom-0 before:left-0 before:top-0 before:w-px before:bg-[var(--color-accent)]">
-              <span className="absolute left-0 top-0 h-px w-6 bg-[var(--color-accent)]" aria-hidden="true" />
-              <span className="absolute bottom-0 left-0 h-px w-6 bg-[var(--color-accent)]" aria-hidden="true" />
+            <div className="mt-9">
               <div className="grid gap-px border border-[var(--color-border)] bg-[var(--color-border)] lg:grid-cols-2">
                 {layer.versions.map((versionId) => (
                   <Link
@@ -40,7 +38,6 @@ export default function TopicsPage() {
                     href={`/${locale}/${versionId}`}
                     className="group relative min-h-60 bg-[var(--color-obsidian)] p-5 transition-colors hover:bg-[var(--color-surface)] sm:p-6"
                   >
-                    <span className="absolute -left-[1.72rem] top-8 h-2 w-2 bg-[var(--color-accent)]" aria-hidden="true" />
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-xs uppercase">{versionId}</span>
