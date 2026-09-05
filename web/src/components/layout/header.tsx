@@ -13,7 +13,6 @@ const REPOSITORY_URL = "https://github.com/fwfuuu-design/claude-code-herness";
 const NAV_ITEMS = [
   { key: "course", href: "/course" },
   { key: "topics", href: "/topics" },
-  { key: "compare", href: "/compare" },
 ] as const;
 
 export function Header() {

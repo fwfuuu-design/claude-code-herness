@@ -11,7 +11,7 @@ npm run dev
 
 Open <http://localhost:3000/en/> or <http://localhost:3000/zh/>.
 
-Primary routes are `/{locale}/course`, `/{locale}/topics`, `/{locale}/compare`, and `/{locale}/sNN`.
+Primary routes are `/{locale}/course`, `/{locale}/topics`, and `/{locale}/sNN`.
 
 ## Content and validation
 

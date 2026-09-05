@@ -63,7 +63,6 @@ export function DiffPageContent({ version }: { version: string }) {
         <h2 id="chapter-source-diff" className="mb-6 font-display text-3xl font-normal">{t("source_diff")}</h2>
         <CodeDiff oldSource={baseline.source} newSource={current.source} oldLabel={`${baseline.id} (${baseline.filename})`} newLabel={`${current.id} (${current.filename})`} />
       </section>
-      <Link href={`/${locale}/compare?a=${baseline.id}&b=${current.id}`} className="button-primary mt-8">{t("open_compare")}<ArrowRight size={14} aria-hidden="true" /></Link>
     </div>
   );
 }
