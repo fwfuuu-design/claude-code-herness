@@ -195,34 +195,9 @@ def agent_loop(messages):
 
 每个课程围绕这个循环单独展开一个 harness 机制。s15 把累积的运行时接回一起；s16 和 s17 再分别聚焦 workflow 编排与目标收口。循环属于 agent，机制属于 harness。
 
-## 版本说明
+## 课程说明
 
-本仓库现在同时保留两条教程线：
-
-- **新版主线：根目录 `s01-s17`**
-  根目录下的 `s01_*` 到 `s17_*` 是新的主版本，也是当前推荐阅读路径。每章包含默认英文 README、中文译本、可运行的 `code.py`，以及必要的图示。
-- **旧版过渡：`docs/`、`agents/`**
-  这些仍保留旧 12 章体系，暂时用于已有读者和旧链接过渡。
-
-新读者请从根目录 `s01_agent_loop/` 读到 `s17_goal_loop/`。旧版章节号和新版不完全一致，不要混用章节号。
-
-### 旧版到新版的对应关系
-
-| 旧 12 章版本 | 新 17 章版本 | 主题 |
-|---|---|---|
-| 旧 s01 | 新 s01 | Agent Loop |
-| 旧 s02 | 新 s02 | Tool Use |
-| 旧 s03 | 新 s05 | TodoWrite |
-| 旧 s04 | 新 s06 | Subagent |
-| 旧 s05 | 新 s07 | Skill Loading |
-| 旧 s06 | 新 s08 | Context Compact |
-| 旧 s07 | 新 s10 | Task System |
-| 旧 s08 | 新 s11 | Background Tasks |
-| 旧 s09 | 新 s13 | Agent Teams |
-| 旧 s10 | 新 s13 | Team Protocols |
-| 旧 s11 | 新 s13 | 自主认领任务 |
-| 旧 s12 | 新 s13 | 任务绑定的 Worktree |
-| 新版新增 | s03、s04、s09、s12、s14、s15、s16、s17 | Permission、Hooks、Memory、Cron、MCP、Agent Harness 集成、Workflow Runtime、Goal Loop |
+根目录下的 `s01_*` 到 `s17_*` 是推荐阅读路径。每章包含默认英文 README、中文译本、可运行的 `code.py`，以及必要的图示。请从 `s01_agent_loop/` 依次读到 `s17_goal_loop/`。
 
 ## 课程边界
 
@@ -230,11 +205,9 @@ def agent_loop(messages):
 
 ## 快速开始
 
-### 新版 17 章主线
-
 ```sh
-git clone https://github.com/huuuboo/learn-claude-code
-cd learn-claude-code
+git clone https://github.com/fwfuuu-design/claude-code-herness.git
+cd claude-code-herness
 
 # Mac 用户：双击「启动.command」即可（自动装依赖 + 首次引导填 DeepSeek key）
 # 或命令行方式：
@@ -247,14 +220,6 @@ python s01_agent_loop/code.py # 各章代码仍可独立运行
 ```
 
 > **零基础学生分发**：让学生下载本仓库（GitHub 页面点「Code → Download ZIP」，或 `git clone`），下载内容不含 `.env` 和 `.venv`。解压后打开「使用说明.txt」，从第 0 步开始。
-
-### 旧版 12 章过渡线
-
-```sh
-python agents/s01_agent_loop.py
-python agents/s12_worktree_task_isolation.py
-python agents/s_full.py
-```
 
 ### Web 平台
 
@@ -344,7 +309,7 @@ flowchart TD
 ## 项目结构
 
 ```
-learn-claude-code/
+claude-code-herness/
   s01_agent_loop/          # 每章一个文件夹
     README.md              #   默认英文文档（完整叙事）
     README.zh.md           #   中文译本
@@ -356,9 +321,7 @@ learn-claude-code/
   s15_integrated_harness/
   s16_workflow_runtime/
   s17_goal_loop/           # 终点章
-  agents/                  # 旧 12 章可运行副本 + s_full.py
   skills/                  # s07 使用的 skill 文件
-  docs/                    # 旧 12 章文档，过渡期保留
   web/                     # 从根目录课程生成
   tests/
 ```
